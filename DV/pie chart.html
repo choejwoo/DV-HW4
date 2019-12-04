@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+
+<body style="margin-left : 400px">
+  <p style="font-size : 30px">
+    The Proportion of Deaths by Road Type<br />
+    Pie Chart
+  </p>
+
+  <script type="text/javascript">
+    var width = 600;
+    var height = 600;
+    var color = d3.scaleOrdinal(d3.schemeCategory20);
+    d3.csv('accidents.csv', function(error, data) {
+
+      var dataGroup = d3.nest()
+        .key(function(d) {
+          return d.도로형태;
+        })
+        .rollup(function(d) {
+          return d3.sum(d, function(g) {
+            return g.사망자수;
+          });
+        })
+        .entries(data);
+
+      dataGroup.forEach(function(d) {
+        if (d.value <= 100) {
+          d.key = null;
+        }
+      })
+
+      console.log(dataGroup);
+
+
+      var arc = d3.arc().innerRadius(0).outerRadius(Math.min(width, height) / 2);
+
+      var arcLabel = (() => {
+        var radius = Math.min(width, height) / 2 * 0.5;
+        return d3.arc().innerRadius(radius).outerRadius(radius);
+      })();
+
+
+      var pie = d3.pie()
+        .sort((a, b) => a.value - b.value)
+        .value(d => d.value);
+
+      var arcs = pie(dataGroup);
+
+      var svg = d3.select("body")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      var g = svg.append('g')
+        .attr('transform', "translate(" + width / 2 + "," + height / 2 + ")");
+
+      g.selectAll('path')
+        .data(arcs)
+        .enter().append('path')
+        .attr("fill", function(d, i) {
+          return color(i);
+        })
+        .attr('stroke', 'white')
+        .attr('d', arc)
+        .append('title')
+        .text(d => `${d.data.key}: ${d.data.value}`);
+
+      var text = g.selectAll('text')
+        .data(arcs)
+        .enter().append('text')
+        .attr('transform', d => `translate(${arcLabel.centroid(d)})`)
+        .attr('dy', '0.35em');
+
+
+      text.append('tspan')
+        .attr('x', 0)
+        .attr('y', '-0.7em')
+        .style('font-weight', 'bold')
+        .text(d => d.data.key)
+
+
+      text.filter(d => (d.endAngle - d.startAngle > 0.25)).append('tspan')
+        .attr('x', 0)
+        .attr('y', '0.7em')
+        .attr('fill-opacity', 0.7)
+        .text(d => d.data.value);
+
+
+      svg.node();
+
+    });
+  </script>
+</body>
