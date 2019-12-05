@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+        svg {
+            background-color: #a8daf7;
+        }
+        svg circle {
+            opacity: 1;
+            stroke: white;
+        }
+        svg circle:hover { stroke: #333; }
+        svg text {
+            color: #333;
+            font-size: 10px;
+            pointer-events: none;
+            text-anchor: middle;
+        }
+        svg .province {
+            fill: #efefef;
+            stroke: #fff;
+        }
+        svg .region-label {
+          fill: #777;
+          font-size: 12px;
+          font-weight: 300;
+          text-anchor: middle;
+        }
+        svg .legend circle {
+          fill: none;
+          stroke: #eee;
+        }
+
+        svg .legend text {
+          fill: #fff;
+          font: 10px sans-serif;
+          text-anchor: middle;
+        }
+        #title {
+          position: absolute;
+          top: 10px;
+          left: 1000px;
+          width: 400px;
+          font-family: sans-serif;
+          text-align: right;
+        }
+        #title p {
+          font-size: 10pt;
+        }
+        .car{
+          fill:#e41a1c;
+        }
+        .truck{
+          fill:#377eb8;
+        }
+        .motocycle{
+          fill:#4daf4a;
+        }
+
+        .car_text{
+          opacity: 1;
+        }
+        .truck_text{
+          opacity: 1;
+        }
+        .motocycle_text{
+          opacity: 1;
+        }
+
+
+    </style>
+  </head>
+  <body>
+    <div id="title">
+
+
+      <h2>우리나라 지역별 사망사고 량</h2>
+
+      <svg width="20" height="20">
+        <rect width="20" height="20" style="fill:#e41a1c;stroke-width:3;stroke:rgb(0,0,0)" />
+      </svg>
+      <p style="display:inline">승용차 사고량</p>
+      <svg width="20" height="20">
+        <rect width="20" height="20" style="fill:#377eb8;stroke-width:3;stroke:rgb(0,0,0)" />
+      </svg>
+      <p style="display:inline">화물차 사고량</p>
+      <svg width="20" height="20">
+        <rect width="20" height="20" style="fill:#4daf4a;stroke-width:3;stroke:rgb(0,0,0)" />
+      </svg>
+      <p style="display:inline">이륜차 사고량</p>
+
+      <div>
+        <input type="checkbox" class="checkbox" value="car" checked><label>승용차</label>
+        <input type="checkbox" class="checkbox" value="truck" checked><label>화물차</label>
+        <input type="checkbox" class="checkbox" value="motocycle" checked><label>이륜차</label>
+      </div>
+
+    </div>
+    <div id="chart"></div>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/queue.v1.min.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script>
+    var width = 1500,
+        height = 1200;
+
+    // var colorScale = d3.scale.linear()
+    //     .range(['red', 'green']) // or use hex values
+    //     .domain([1, 3]);
+
+    // var colorScale = d3.scaleThreshold()
+    //   .domain([1,10])
+    //   .range(['red','yellow','blue']);
+
+    var svg = d3.select("#chart").append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    var map = svg.append("g").attr("id", "map"),
+        points = svg.append("g").attr("id", "cities");
+
+    var projection = d3.geoMercator()
+        .center([128, 36])
+        .scale(9000)
+        .translate([width/2, height/2]);
+
+    var path = d3.geoPath().projection(projection);
+
+    var quantize = d3.scaleQuantize()
+        .domain([0, 12234630]) // FIXME: automate
+        .range(d3.range(9).map(function(i) { return " p" + i; }));
+
+    var popById = d3.map();
+
+    var radius = d3.scaleSqrt()
+        .domain([0, 1e6])
+        .range([0, 15]);
+
+    var legend = svg.append("g")
+        .attr("class", "legend")
+        .attr("transform", "translate(" + (width/2 + 100) + "," + (height - 20) + ")")
+      .selectAll("g")
+        .data([1e6, 5e6, 1e7])
+      .enter().append("g");
+
+    legend.append("circle")
+        .attr("cy", function(d) { return -radius(d); })
+        .attr("r", radius);
+
+    legend.append("text")
+        .attr("y", function(d) { return -2 * radius(d); })
+        .attr("dy", "1.3em")
+        .text(d3.format(".1s"));
+
+    // add map
+    d3.json("provinces-topo-simple.json", function(error, data) {
+      map.selectAll('path')
+          .data(topojson.feature(data, data.objects['provinces-geo']).features)
+        .enter().append('path')
+          .attr('class', function(d) { console.log(); return 'province c' + d.properties.code })
+          .attr('d', path)
+    });
+
+    var position_car ={
+      "강원":0,
+      "경기":0,
+      "서울":0,
+      "경남":0,
+      "경북":0,
+      "광주":0,
+      "대구":0,
+      "대전":0,
+      "부산":0,
+      "세종":0,
+      "울산":0,
+      "전남":0,
+      "전북":0,
+      "제주":0,
+      "충남":0,
+      "충북":0,
+      "인천":0
+    };
+
+    var position_truck ={
+      "강원":0,
+      "경기":0,
+      "서울":0,
+      "경남":0,
+      "경북":0,
+      "광주":0,
+      "대구":0,
+      "대전":0,
+      "부산":0,
+      "세종":0,
+      "울산":0,
+      "전남":0,
+      "전북":0,
+      "제주":0,
+      "충남":0,
+      "충북":0,
+      "인천":0
+    };
+
+    var position_motocycle ={
+      "강원":0,
+      "경기":0,
+      "서울":0,
+      "경남":0,
+      "경북":0,
+      "광주":0,
+      "대구":0,
+      "대전":0,
+      "부산":0,
+      "세종":0,
+      "울산":0,
+      "전남":0,
+      "전북":0,
+      "제주":0,
+      "충남":0,
+      "충북":0,
+      "인천":0
+    };
+
+    var position_lon = {
+      "강원":128.236341,
+      "경기":127.415701,
+      "서울":126.999138,
+      "경남":128.273640,
+      "경북":128.963518,
+      "광주":126.825652,
+      "대구":128.566267,
+      "대전":127.385468,
+      "부산":129.060007,
+      "세종":127.263145,
+      "울산":129.264866,
+      "전남":126.912648,
+      "전북":127.144303,
+      "제주":126.539481,
+      "충남":126.796781,
+      "충북":127.755969,
+      "인천":126.567584
+    }//경도
+
+    var position_lat = {
+      "강원":37.807516,
+      "경기":37.434763,
+      "서울":37.551859,
+      "경남":35.316404,
+      "경북":36.595549,
+      "광주":35.152912,
+      "대구":35.834127,
+      "대전":36.352335,
+      "부산":35.181368,
+      "세종":36.555708,
+      "울산":35.552003,
+      "전남":34.874005,
+      "전북":35.712648,
+      "제주":33.368254,
+      "충남":36.565612,
+      "충북":36.778852,
+      "인천":37.596751
+    }//위도
+
+    position = [];
+
+    d3.csv("dataSet.csv", function(data) {
+      data.forEach(function(d){
+        if(d.가해자_당사자종별_대분류=="승용차"){
+          position_car[d.발생지시도]++;
+        }
+        else if(d.가해자_당사자종별_대분류=="화물차"){
+          position_truck[d.발생지시도]++;
+        }
+        else if(d.가해자_당사자종별_대분류=="이륜차"){
+          position_motocycle[d.발생지시도]++;
+        }
+      });
+
+      console.log(position_car);
+
+      position_car["강원"] /= 10;
+      position_car["경기"] /= 10;
+      position_car["서울"] /= 10;
+      position_car["경남"] /= 10;
+      position_car["경북"] /= 10;
+      position_car["광주"] /= 10;
+      position_car["대구"] /= 10;
+      position_car["대전"] /= 10;
+      position_car["부산"] /= 10;
+      position_car["세종"] /= 10;
+      position_car["울산"] /= 10;
+      position_car["전남"] /= 10;
+      position_car["전북"] /= 10;
+      position_car["제주"] /= 10;
+      position_car["충남"] /= 10;
+      position_car["충북"] /= 10;
+      position_car["인천"] /= 10;
+
+      position_truck["강원"] /= 10;
+      position_truck["경기"] /= 10;
+      position_truck["서울"] /= 10;
+      position_truck["경남"] /= 10;
+      position_truck["경북"] /= 10;
+      position_truck["광주"] /= 10;
+      position_truck["대구"] /= 10;
+      position_truck["대전"] /= 10;
+      position_truck["부산"] /= 10;
+      position_truck["세종"] /= 10;
+      position_truck["울산"] /= 10;
+      position_truck["전남"] /= 10;
+      position_truck["전북"] /= 10;
+      position_truck["제주"] /= 10;
+      position_truck["충남"] /= 10;
+      position_truck["충북"] /= 10;
+      position_truck["인천"] /= 10;
+
+
+      position_motocycle["강원"] /= 10;
+      position_motocycle["경기"] /= 10;
+      position_motocycle["서울"] /= 10;
+      position_motocycle["경남"] /= 10;
+      position_motocycle["경북"] /= 10;
+      position_motocycle["광주"] /= 10;
+      position_motocycle["대구"] /= 10;
+      position_motocycle["대전"] /= 10;
+      position_motocycle["부산"] /= 10;
+      position_motocycle["세종"] /= 10;
+      position_motocycle["울산"] /= 10;
+      position_motocycle["전남"] /= 10;
+      position_motocycle["전북"] /= 10;
+      position_motocycle["제주"] /= 10;
+      position_motocycle["충남"] /= 10;
+      position_motocycle["충북"] /= 10;
+      position_motocycle["인천"] /= 10;
+
+      position.push({lon:position_lon["강원"], lat:position_lat["강원"], pop:position_car["강원"], color:1, group:"car", name:"강원"});
+      position.push({lon:position_lon["경기"], lat:position_lat["경기"], pop:position_car["경기"], color:1, group:"car", name:"경기"});
+      position.push({lon:position_lon["서울"], lat:position_lat["서울"], pop:position_car["서울"], color:1, group:"car", name:"서울"});
+      position.push({lon:position_lon["경남"], lat:position_lat["경남"], pop:position_car["경남"], color:1, group:"car", name:"경남"});
+      position.push({lon:position_lon["경북"], lat:position_lat["경북"], pop:position_car["경북"], color:1, group:"car", name:"경북"});
+      position.push({lon:position_lon["광주"], lat:position_lat["광주"], pop:position_car["광주"], color:1, group:"car", name:"광주"});
+      position.push({lon:position_lon["대구"], lat:position_lat["대구"], pop:position_car["대구"], color:1, group:"car", name:"대구"});
+      position.push({lon:position_lon["대전"], lat:position_lat["대전"], pop:position_car["대전"], color:1, group:"car", name:"대전"});
+      position.push({lon:position_lon["부산"], lat:position_lat["부산"], pop:position_car["부산"], color:1, group:"car", name:"부산"});
+      position.push({lon:position_lon["세종"], lat:position_lat["세종"], pop:position_car["세종"], color:1, group:"car", name:"세종"});
+      position.push({lon:position_lon["울산"], lat:position_lat["울산"], pop:position_car["울산"], color:1, group:"car", name:"울산"});
+      position.push({lon:position_lon["전남"], lat:position_lat["전남"], pop:position_car["전남"], color:1, group:"car", name:"전남"});
+      position.push({lon:position_lon["전북"], lat:position_lat["전북"], pop:position_car["전북"], color:1, group:"car", name:"전북"});
+      position.push({lon:position_lon["제주"], lat:position_lat["제주"], pop:position_car["제주"], color:1, group:"car", name:"제주"});
+      position.push({lon:position_lon["충남"], lat:position_lat["충남"], pop:position_car["충남"], color:1, group:"car", name:"충남"});
+      position.push({lon:position_lon["충북"], lat:position_lat["충북"], pop:position_car["충북"], color:1, group:"car", name:"충북"});
+      position.push({lon:position_lon["인천"], lat:position_lat["인천"], pop:position_car["인천"], color:1, group:"car", name:"인천"});
+
+      position.push({lon:position_lon["강원"], lat:position_lat["강원"], pop:position_truck["강원"], color:2, group:"truck", name:"강원"});
+      position.push({lon:position_lon["경기"], lat:position_lat["경기"], pop:position_truck["경기"], color:2, group:"truck", name:"경기"});
+      position.push({lon:position_lon["서울"], lat:position_lat["서울"], pop:position_truck["서울"], color:2, group:"truck", name:"서울"});
+      position.push({lon:position_lon["경남"], lat:position_lat["경남"], pop:position_truck["경남"], color:2, group:"truck", name:"경남"});
+      position.push({lon:position_lon["경북"], lat:position_lat["경북"], pop:position_truck["경북"], color:2, group:"truck", name:"경북"});
+      position.push({lon:position_lon["광주"], lat:position_lat["광주"], pop:position_truck["광주"], color:2, group:"truck", name:"광주"});
+      position.push({lon:position_lon["대구"], lat:position_lat["대구"], pop:position_truck["대구"], color:2, group:"truck", name:"대구"});
+      position.push({lon:position_lon["대전"], lat:position_lat["대전"], pop:position_truck["대전"], color:2, group:"truck", name:"대전"});
+      position.push({lon:position_lon["부산"], lat:position_lat["부산"], pop:position_truck["부산"], color:2, group:"truck", name:"부산"});
+      position.push({lon:position_lon["세종"], lat:position_lat["세종"], pop:position_truck["세종"], color:2, group:"truck", name:"세종"});
+      position.push({lon:position_lon["울산"], lat:position_lat["울산"], pop:position_truck["울산"], color:2, group:"truck", name:"울산"});
+      position.push({lon:position_lon["전남"], lat:position_lat["전남"], pop:position_truck["전남"], color:2, group:"truck", name:"전남"});
+      position.push({lon:position_lon["전북"], lat:position_lat["전북"], pop:position_truck["전북"], color:2, group:"truck", name:"전북"});
+      position.push({lon:position_lon["제주"], lat:position_lat["제주"], pop:position_truck["제주"], color:2, group:"truck", name:"제주"});
+      position.push({lon:position_lon["충남"], lat:position_lat["충남"], pop:position_truck["충남"], color:2, group:"truck", name:"충남"});
+      position.push({lon:position_lon["충북"], lat:position_lat["충북"], pop:position_truck["충북"], color:2, group:"truck", name:"충북"});
+      position.push({lon:position_lon["인천"], lat:position_lat["인천"], pop:position_truck["인천"], color:2, group:"truck", name:"인천"});
+
+
+      position.push({lon:position_lon["강원"], lat:position_lat["강원"], pop:position_motocycle["강원"], color:3, group:"motocycle", name:"강원"});
+      position.push({lon:position_lon["경기"], lat:position_lat["경기"], pop:position_motocycle["경기"], color:3, group:"motocycle", name:"경기"});
+      position.push({lon:position_lon["서울"], lat:position_lat["서울"], pop:position_motocycle["서울"], color:3, group:"motocycle", name:"서울"});
+      position.push({lon:position_lon["경남"], lat:position_lat["경남"], pop:position_motocycle["경남"], color:3, group:"motocycle", name:"경남"});
+      position.push({lon:position_lon["경북"], lat:position_lat["경북"], pop:position_motocycle["경북"], color:3, group:"motocycle", name:"경북"});
+      position.push({lon:position_lon["광주"], lat:position_lat["광주"], pop:position_motocycle["광주"], color:3, group:"motocycle", name:"광주"});
+      position.push({lon:position_lon["대구"], lat:position_lat["대구"], pop:position_motocycle["대구"], color:3, group:"motocycle", name:"대구"});
+      position.push({lon:position_lon["대전"], lat:position_lat["대전"], pop:position_motocycle["대전"], color:3, group:"motocycle", name:"대전"});
+      position.push({lon:position_lon["부산"], lat:position_lat["부산"], pop:position_motocycle["부산"], color:3, group:"motocycle", name:"부산"});
+      position.push({lon:position_lon["세종"], lat:position_lat["세종"], pop:position_motocycle["세종"], color:3, group:"motocycle", name:"세종"});
+      position.push({lon:position_lon["울산"], lat:position_lat["울산"], pop:position_motocycle["울산"], color:3, group:"motocycle", name:"울산"});
+      position.push({lon:position_lon["전남"], lat:position_lat["전남"], pop:position_motocycle["전남"], color:3, group:"motocycle", name:"전남"});
+      position.push({lon:position_lon["전북"], lat:position_lat["전북"], pop:position_motocycle["전북"], color:3, group:"motocycle", name:"전북"});
+      position.push({lon:position_lon["제주"], lat:position_lat["제주"], pop:position_motocycle["제주"], color:3, group:"motocycle", name:"제주"});
+      position.push({lon:position_lon["충남"], lat:position_lat["충남"], pop:position_motocycle["충남"], color:3, group:"motocycle", name:"충남"});
+      position.push({lon:position_lon["충북"], lat:position_lat["충북"], pop:position_motocycle["충북"], color:3, group:"motocycle", name:"충북"});
+      position.push({lon:position_lon["인천"], lat:position_lat["인천"], pop:position_motocycle["인천"], color:3, group:"motocycle", name:"인천"});
+
+
+      points.selectAll("circle")
+          .data(position)
+          .enter().append("circle")
+          .attr("cx", function(d) { return projection([d.lon, d.lat])[0]; })
+          .attr("cy", function(d) { return projection([d.lon, d.lat])[1]; })
+          .attr("r", function(d) { return 10 * Math.sqrt(d.pop); })
+          .attr("class",function(d){
+            if(d.color == 1){
+              return "car";
+            }
+            else if(d.color == 2){
+              return "truck";
+            }
+            else if(d.color == 3){
+              return "motocycle";
+            }
+          })
+          .on("mouseover",function(){d3.select(this).attr("fill","red");})
+          .on("mouseout",function(){d3.select(this).attr("fill","blue");});
+
+
+      points.selectAll("text")
+            .data(position)
+            .enter().append("text")
+            .attr("x", function(d) {
+              return projection([d.lon, d.lat])[0];
+            })
+            .attr("y", function(d) {
+              return projection([d.lon, d.lat])[1] - 5;
+            })
+            .attr("class",function(d){
+              if(d.color == 1){
+                return "car_text";
+              }
+              else if(d.color == 2){
+                return "truck_text";
+              }
+              else if(d.color == 3){
+                return "motocycle_text";
+              }
+            })
+            .text(function(d) {
+              return d.name;
+            });
+
+
+
+          function update(){
+               // For each check box:
+               d3.selectAll(".checkbox").each(function(d){
+                 cb = d3.select(this);
+                 grp = cb.property("value")
+
+                 // If the box is check, I show the group
+                 if(cb.property("checked")){
+                   svg.selectAll("."+grp).transition().duration(1).style("opacity", 0.6).attr("r", function(d){ return 10 * Math.sqrt(d.pop) })
+                   svg.selectAll("."+grp+"_text").transition().duration(1).style("opacity", 1);
+
+                 // Otherwise I hide it
+                 }else{
+                   svg.selectAll("."+grp).transition().duration(1).style("opacity", 0).attr("r", 0)
+                   svg.selectAll("."+grp+"_text").transition().duration(1).style("opacity", 0);
+                 }
+               })
+             }
+
+             // When a button change, I run the update function
+             d3.selectAll(".checkbox").on("change",update);
+             // And I initialize it at the beginning
+             update()
+
+    });
+    </script>
+  </body>
+</html>

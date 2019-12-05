@@ -1,0 +1,42 @@
+<!doctype html>
+
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Learn D3.js</title>
+  <style>
+    svg {
+      border: 1px solid;
+    }
+
+    .bar {
+      fill: skyblue;
+      fill-opacity: 0.3;
+      stroke: skyblue;
+    }
+
+    .bar:hover {
+      fill: skyblue;
+      fill-opacity:1;
+    }
+
+    .text {
+      fill: black;
+      /*-일반적으로 폰트색은 font-color지만 여긴 d3는 fill-*/
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>2015 ~ 2018년도 차량 별 사고 수</h1>
+
+  <svg width="900" height="500"></svg>
+
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="barChart.js"></script>
+  <p style="margin-left:50px">X:차종  Y:사고수</p>
+</body>
+
+</html>
