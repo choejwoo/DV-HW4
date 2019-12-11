@@ -4,15 +4,15 @@
 
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
 
 <head>
   <meta charset="utf-8">
   <title>교통사고 사상자 통계 분석 페이지</title>
 </head>
 
-<body>
 
-
+<div style = "margin-left : -200px">
 
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="font: bold">
@@ -48,9 +48,206 @@
           </ul>
         </div>
   </nav>
+</div>
+
+  <body style = "margin-left : 200px">
+
+  <div>
+    <p style="font-size : 30px; margin-left : 140px">
+      도로 별 사망자 수 통계
+      <span style = "margin-left : 220px">도로 개수 대비 사망자 수 비율</span>
+    </p>
+
+    <script type="text/javascript">
+      var width = 600;
+      var height = 600;
+      var color = d3.scaleOrdinal(d3.schemeCategory20);
+      d3.csv('DV/accidents.csv', function(error, data) {
+
+        var dataGroup = d3.nest()
+          .key(function(d) {
+            return d.도로형태;
+          })
+          .rollup(function(d) {
+            return d3.sum(d, function(g) {
+              return g.사망자수;
+            });
+          })
+          .entries(data);
+
+        dataGroup.forEach(function(d) {
+          if (d.value <= 100) {
+            d.key = null;
+          }
+        })
+
+        var arc = d3.arc().innerRadius(0).outerRadius(Math.min(width, height) / 2);
+
+        var arcLabel = (() => {
+          var radius = Math.min(width, height) / 2 * 0.5;
+          return d3.arc().innerRadius(radius).outerRadius(radius);
+        })();
+
+
+        var pie = d3.pie()
+          .sort((a, b) => a.value - b.value)
+          .value(d => d.value);
+
+        var arcs = pie(dataGroup);
+
+        var svg = d3.select("body")
+          .append("svg")
+          .attr("width", width)
+          .attr("height", height);
+
+        var g = svg.append('g')
+          .attr('transform', "translate(" + width / 2 + "," + height / 2 + ")");
+
+        g.selectAll('path')
+          .data(arcs)
+          .enter().append('path')
+          .attr("fill", function(d, i) {
+            return color(i);
+          })
+          .attr('stroke', 'white')
+          .attr('d', arc)
+          .append('title')
+          .text(d => `${d.data.key}: ${d.data.value}`);
+
+        var text = g.selectAll('text')
+          .data(arcs)
+          .enter().append('text')
+          .attr('transform', d => `translate(${arcLabel.centroid(d)})`)
+          .attr('dy', '0.35em');
+
+
+        text.append('tspan')
+          .attr('x', 0)
+          .attr('y', '-0.7em')
+          .style('font-weight', 'bold')
+          .text(d => d.data.key)
+
+
+        text.filter(d => (d.endAngle - d.startAngle > 0.25)).append('tspan')
+          .attr('x', 0)
+          .attr('y', '0.7em')
+          .attr('fill-opacity', 0.7)
+          .text(d => d.data.value);
+
+
+        svg.node();
+
+      });
+    </script>
+  </div>
 
 
 
 </body>
+
+<body>
+
+
+  <script type="text/javascript">
+    var width = 600;
+    var height = 580;
+    var dataGroup = [];
+    var color = d3.scaleOrdinal(d3.schemeCategory20);
+    d3.csv('DV/accidents.csv', function(error, data) {
+
+      var dataset = d3.nest()
+        .key(function(d) {
+          return d.도로형태_대분류;
+        })
+        .rollup(function(d) {
+          return d3.sum(d, function(g) {
+            return g.사망자수;
+          });
+        })
+        .entries(data);
+
+      dataset.forEach(function(d) {
+        if (d.key == "단일로") {
+          d.value = (d.value / 102465).toFixed(3);
+          dataGroup.push({
+            "key": d.key,
+            "value": d.value
+          });
+        }
+        if (d.key == "교차로") {
+          d.value = (d.value / 2387).toFixed(3);
+          dataGroup.push({
+            "key": d.key,
+            "value": d.value
+          });
+        }
+      })
+
+      console.log(dataGroup);
+
+
+      var arc = d3.arc().innerRadius(0).outerRadius(Math.min(width, height) / 2);
+
+      var arcLabel = (() => {
+        var radius = Math.min(width, height) / 2 * 0.5;
+        return d3.arc().innerRadius(radius).outerRadius(radius);
+      })();
+
+      var pie = d3.pie()
+        .sort((a, b) => a.value - b.value)
+        .value(d => d.value);
+
+      var arcs = pie(dataGroup);
+
+      var svg = d3.select("body")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+      var g = svg.append('g')
+        .attr('transform', "translate(" + width / 2 + "," + height / 2 + ")");
+
+      g.selectAll('path')
+        .data(arcs)
+        .enter().append('path')
+        .attr("fill", function(d, i) {
+          return color(i);
+        })
+        .attr('stroke', 'white')
+        .attr('d', arc)
+        .append('title')
+        .text(d => `${d.data.key}: ${d.data.value}`);
+
+
+      var text = g.selectAll('text')
+        .data(arcs)
+        .enter().append('text')
+        .attr('transform', d => `translate(${arcLabel.centroid(d)})`)
+        .attr('dy', '0.35em');
+
+      text.append('tspan')
+        .attr('x', 0)
+        .attr('y', '-0.7em')
+        .style('font-weight', 'bold')
+        .text(d => d.data.key)
+
+
+      text.filter(d => (d.endAngle - d.startAngle > 0.25)).append('tspan')
+        .attr('x', 0)
+        .attr('y', '0.7em')
+        .attr('fill-opacity', 0.7)
+        .text(d => d.data.value);
+
+
+      svg.node();
+
+    });
+  </script>
+</body>
+
+<p style = "position : absolute; margin-top : 600px; margin-left : 200px">
+  도로 별 사망자 수 통계를 봤을 때는 단일로가 반 이상의 사망자 수를 차지하는 것을 볼 수 있습니다.<br />
+  하지만 전국의 도로 개수를 종합하여 확인하였을 때는 교차로가 단일로 보다 사망자 비율이 높은 것을 볼 수 있습니다.
+</p>
 
 </html>
