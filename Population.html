@@ -4,6 +4,7 @@
 
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
 
 <head>
   <meta charset="utf-8">
@@ -22,35 +23,380 @@
     </button>
 
 
-        <div class="collapse navbar-collapse" id="navbarColor01">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/Home.html">홈 </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/DayandNight.html">주, 야간</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/CarClassification.html">차량 종류</a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/Population.html">인구 수<span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/RoadType.html">도로 형태</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/Map.html">지역</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/OverallAnalysis.html">종합</a>
-            </li>
-          </ul>
-        </div>
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/Home.html">홈 </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/DayandNight.html">주, 야간</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/CarClassification.html">차량 종류</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/Population.html">인구 수<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/RoadType.html">도로 형태</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/Map.html">지역</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/OverallAnalysis.html">종합</a>
+        </li>
+      </ul>
+    </div>
   </nav>
 
 
 
+
+
+  <div style = "margin-left : 20px">
+    <p style="font-size : 30px; margin-left :85px;" >
+      인구수 대비 사망자수의 증가 추이
+    </p>
+
+    <div id="scatter"></div>
+    <script type>
+      var margin = {
+          top: 10,
+          right: 30,
+          bottom: 30,
+          left: 40
+        },
+        width = 800 - margin.left - margin.right,
+        height = 550 - margin.top - margin.bottom;
+
+      var svg = d3.select("#scatter")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+
+      d3.csv('DV/accidents.csv', function(error, data) {
+
+        var dataGroup = d3.nest()
+          .key(function(d) {
+            return d.발생지시도;
+          })
+          .rollup(function(d) {
+            return d3.sum(d, function(g) {
+              return g.사망자수;
+            });
+          })
+          .entries(data);
+
+
+        var dataset = [];
+
+        dataGroup.forEach(function(d) {
+          if (d.key == "경기")
+            dataset.push({
+              "Name": d.key,
+              "y": d.value,
+              "x": 1300
+            });
+          if (d.key == "경북")
+            dataset.push({
+              "Name": d.key,
+              "y": d.value,
+              "x": 266
+            });
+          if (d.key == "전남")
+            dataset.push({
+              "Name": d.key,
+              "y": d.value,
+              "x": 186
+            });
+          if (d.key == "충남")
+            dataset.push({
+              "Name": d.key,
+              "y": d.value,
+              "x": 212
+            });
+          if (d.key == "서울")
+            dataset.push({
+              "Name": d.key,
+              "y": d.value,
+              "x": 973
+            });
+          if (d.key == "경남")
+            dataset.push({
+              "Name": d.key,
+              "y": d.value,
+              "x": 336
+            });
+          if (d.key == "전북")
+            dataset.push({
+              "Name": d.key,
+              "y": d.value,
+              "x": 182
+            });
+          if (d.key == "강원")
+            dataset.push({
+              "Name": d.key,
+              "y": d.value,
+              "x": 154
+            });
+          if (d.key == "충북")
+            dataset.push({
+              "Name": d.key,
+              "y": d.value,
+              "x": 159
+            });
+          if (d.key == "부산")
+            dataset.push({
+              "Name": d.key,
+              "y": d.value,
+              "x": 341
+            });
+          if (d.key == "대구")
+            dataset.push({
+              "Name": d.key,
+              "y": d.value,
+              "x": 244
+            });
+          if (d.key == "광주")
+            dataset.push({
+              "Name": d.key,
+              "y": d.value,
+              "x": 145
+            });
+          if (d.key == "인천")
+            dataset.push({
+              "Name": d.key,
+              "y": d.value,
+              "x": 295
+            });
+          if (d.key == "대전")
+            dataset.push({
+              "Name": d.key,
+              "y": d.value,
+              "x": 147
+            });
+          if (d.key == "제주")
+            dataset.push({
+              "Name": d.key,
+              "y": d.value,
+              "x": 67
+            });
+          if (d.key == "울산")
+            dataset.push({
+              "Name": d.key,
+              "y": d.value,
+              "x": 114
+            });
+          if (d.key == "세종")
+            dataset.push({
+              "Name": d.key,
+              "y": d.value,
+              "x": 33
+            });
+        });
+
+        console.log(dataset);
+
+
+        var x = d3.scaleLinear()
+          .domain([0, 1500])
+          .range([0, width]);
+        svg.append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x));
+
+
+        var y = d3.scaleLinear()
+          .domain([0, 800])
+          .range([height, 0]);
+
+        svg.append("g")
+          .call(d3.axisLeft(y));
+
+
+        svg.append("g")
+          .selectAll("dot")
+          .data(dataset)
+          .enter()
+          .append("circle")
+          .attr("cx", function(d) {
+            return x(d.x);
+          })
+          .attr("cy", function(d) {
+            return y(d.y);
+          })
+          .attr("r", 8)
+          .style("fill", "#69b3a2");
+
+        svg.append("g")
+          .selectAll("dot")
+          .data(dataset)
+          .enter()
+          .append("text")
+          .attr("dx", function(d) {
+            return x(d.x + 14);
+          })
+          .attr("dy", function(d) {
+            return y(d.y - 7);
+          })
+          .style("font-size", "12px")
+          .text(function(d) {
+            return d.Name;
+          });
+
+      });
+    </script>
+    <p>
+      x축 : 인구수(10,000), y축 : 사망자수
+    </p>
+    <p>
+      인구수 대비 사망자 수를 확인 할 수 있는 그래프입니다.
+      인구수가 증가할수록 사망자 수가 많아집니다.
+    </p>
+    <p>
+      하지만 경기도와 서울의 경우는 따로 떨어져 있는 것을 확인할 수 있습니다.
+    </p>
+    <p>
+      아래 그림을 통해 좀 더 한눈에 확인 할 수 있습니다.
+    </p>
+  </div>
+
+  <div style = " margin-left : 20px">
+
+    <p style="font-size : 30px ; margin-left :100px;">
+      지역 별 사망자 수 확인
+    </p>
+    <script type="text/javascript">
+      d3.csv('DV/accidents.csv', function(error, data) {
+
+        var dataGroup = d3.nest()
+          .key(function(d) {
+            return d.발생지시도;
+          })
+          .rollup(function(d) {
+            return d3.sum(d, function(g) {
+              return g.사망자수;
+            });
+          })
+          .entries(data);
+
+
+        var dataset = {
+          "children": []
+        };
+
+        dataGroup.forEach(function(d) {
+          dataset.children.push({
+            "Name": d.key,
+            "Count": d.value
+          })
+        });
+
+        console.log(dataset);
+
+
+
+
+        var diameter = 600;
+        var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+        var bubble = d3.pack(dataset)
+          .size([diameter, diameter])
+          .padding(1.5);
+
+        var svg2 = d3.select("body")
+          .append("svg")
+          .attr("width", diameter)
+          .attr("height", diameter)
+          .attr("class", "bubble");
+
+        var nodes = d3.hierarchy(dataset)
+          .sum(function(d) {
+            return d.Count;
+          });
+
+        var node = svg2.selectAll(".node")
+          .data(bubble(nodes).descendants())
+          .enter()
+          .filter(function(d) {
+            return !d.children
+          })
+          .append("g")
+          .attr("class", "node")
+          .attr("transform", function(d) {
+            return "translate(" + d.x + 500 +"," + d.y + ")";
+          });
+
+        node.append("title")
+          .text(function(d) {
+            return d.Name + ": " + d.Count;
+          });
+
+        node.append("circle")
+          .attr("r", function(d) {
+            return d.r;
+          })
+          .style("fill", function(d, i) {
+            return color(i);
+          });
+
+        node.append("text")
+          .attr("dy", ".2em")
+          .style("text-anchor", "middle")
+          .text(function(d) {
+            return d.data.Name.substring(0, d.r / 3);
+          })
+          .attr("font-family", "sans-serif")
+          .attr("font-size", function(d) {
+            return d.r / 5;
+          })
+          .attr("fill", "white");
+
+        node.append("text")
+          .attr("dy", "1.3em")
+          .style("text-anchor", "middle")
+          .text(function(d) {
+            return d.data.Count;
+          })
+          .attr("font-family", "Gill Sans", "Gill Sans MT")
+          .attr("font-size", function(d) {
+            return d.r / 5;
+          })
+          .attr("fill", "white");
+
+        d3.select(self.frameElement)
+          .style("height", diameter + "px");
+
+        var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+        var bubble = d3.pack(dataset)
+          .size([diameter, diameter])
+          .padding(1.5);
+
+        var node = svg2.selectAll(".node")
+          .data(bubble(nodes).descendants())
+          .enter()
+          .filter(function(d) {
+            return !d.children
+          })
+          .append("g")
+          .attr("class", "node")
+          .attr("transform", function(d) {
+            return "translate(" + d.x + 500 + "," + d.y + ")";
+          });
+
+      });
+    </script>
+
+
+  </div>
+
 </body>
+
 
 </html>
