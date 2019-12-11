@@ -38,7 +38,6 @@
           text-anchor: middle;
         }
         #title {
-          position: absolute;
           top: 10px;
           left: 1000px;
           width: 400px;
@@ -87,7 +86,7 @@
       </div>
 
     </div>
-    <div id="chart"></div>
+    <div id="chart2"></div>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://d3js.org/queue.v1.min.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
@@ -103,7 +102,7 @@
     //   .domain([1,10])
     //   .range(['red','yellow','blue']);
 
-    var svg = d3.select("#chart").append("svg")
+    var svg = d3.select("#chart2").append("svg")
         .attr("width", width)
         .attr("height", height);
 
