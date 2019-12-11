@@ -4,7 +4,7 @@
 
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
+<link rel="stylesheet" href="DayandNight.css" type="text/css">
 <head>
   <meta charset="utf-8">
   <title>교통사고 사상자 통계 분석 페이지</title>
@@ -49,6 +49,263 @@
         </div>
   </nav>
 
+<div class = "container">
+
+
+    <svg width="800" height="500"></svg>
+
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script>
+      var dayofNight = [];
+      var dayofNoon = [];
+
+      var daycount = 0;
+
+      d3.csv("DV/accidents.csv", function(error, data) {
+
+
+        data.forEach(function(d) {
+          if (d.요일 == "월" && d.주야 == "주간")
+            daycount = daycount + parseInt(d.사망자수);
+        });
+        dayofNoon.push({
+          x: '월',
+          y: daycount
+        });
+        daycount = 0;
+
+        data.forEach(function(d) {
+          if (d.요일 == '화' && d.주야 == "주간")
+            daycount = daycount + parseInt(d.사망자수);
+        });
+        dayofNoon.push({
+          x: '화',
+          y: daycount
+        });
+        daycount = 0;
+
+        data.forEach(function(d) {
+          if (d.요일 == '수' && d.주야 == "주간")
+            daycount = daycount + parseInt(d.사망자수);
+        });
+        dayofNoon.push({
+          x: '수',
+          y: daycount
+        });
+        daycount = 0;
+
+        data.forEach(function(d) {
+          if (d.요일 == '목' && d.주야 == "주간")
+            daycount = daycount + parseInt(d.사망자수);
+        });
+        dayofNoon.push({
+          x: '목',
+          y: daycount
+        });
+        daycount = 0;
+
+        data.forEach(function(d) {
+          if (d.요일 == '금' && d.주야 == "주간")
+            daycount = daycount + parseInt(d.사망자수);
+        });
+        dayofNoon.push({
+          x: '금',
+          y: daycount
+        });
+        daycount = 0;
+
+        data.forEach(function(d) {
+          if (d.요일 == '토' && d.주야 == "주간")
+            daycount = daycount + parseInt(d.사망자수);
+        });
+        dayofNoon.push({
+          x: '토',
+          y: daycount
+        });
+        daycount = 0;
+
+        data.forEach(function(d) {
+          if (d.요일 == '일' && d.주야 == "주간")
+            daycount = daycount + parseInt(d.사망자수);
+        });
+        dayofNoon.push({
+          x: '일',
+          y: daycount
+        });
+        daycount = 0;
+
+        data.forEach(function(d) {
+          if (d.요일 == "월" && d.주야 == "야간")
+            daycount = daycount + parseInt(d.사망자수);
+        });
+        dayofNight.push({
+          x: '월',
+          y: daycount
+        });
+        daycount = 0;
+
+        data.forEach(function(d) {
+          if (d.요일 == '화' && d.주야 == "야간")
+            daycount = daycount + parseInt(d.사망자수);
+        });
+        dayofNight.push({
+          x: '화',
+          y: daycount
+        });
+        daycount = 0;
+
+        data.forEach(function(d) {
+          if (d.요일 == '수' && d.주야 == "야간")
+            daycount = daycount + parseInt(d.사망자수);
+        });
+        dayofNight.push({
+          x: '수',
+          y: daycount
+        });
+        daycount = 0;
+
+        data.forEach(function(d) {
+          if (d.요일 == '목' && d.주야 == "야간")
+            daycount = daycount + parseInt(d.사망자수);
+        });
+        dayofNight.push({
+          x: '목',
+          y: daycount
+        });
+        daycount = 0;
+
+        data.forEach(function(d) {
+          if (d.요일 == '금' && d.주야 == "야간")
+            daycount = daycount + parseInt(d.사망자수);
+        });
+        dayofNight.push({
+          x: '금',
+          y: daycount
+        });
+        daycount = 0;
+
+        data.forEach(function(d) {
+          if (d.요일 == '토' && d.주야 == "야간")
+            daycount = daycount + parseInt(d.사망자수);
+        });
+        dayofNight.push({
+          x: '토',
+          y: daycount
+        });
+        daycount = 0;
+
+        data.forEach(function(d) {
+          if (d.요일 == '일' && d.주야 == "야간")
+            daycount = daycount + parseInt(d.사망자수);
+        });
+        dayofNight.push({
+          x: '일',
+          y: daycount
+        });
+        daycount = 0;
+
+        console.log(dayofNight);
+
+        var svg = d3.select("svg");
+        var width = parseInt(svg.style("width"), 10) - 30;
+        var height = parseInt(svg.style("height"), 10) - 20;
+
+        var svgG = svg.append("g")
+          .attr("transform", "translate(30,0)");
+
+        var svgG2 = svg.append("g")
+          .attr("transform", "translate(30,0)");
+
+        var yScale = d3.scaleLinear()
+          .domain([0, d3.max(dayofNoon, function(d) {
+            return d.y;
+          })])
+          .range([height, 30]);
+
+        var xScale = d3.scaleBand()
+          .domain(dayofNoon.map(function(d) {
+            return d.x;
+          }))
+          .range([0, width]).padding(0, 50);
+
+        svgG.selectAll("rect")
+          .data(dayofNoon)
+          .enter().append("rect")
+          .attr("class", "bar")
+          .attr("height", function(d, i) {
+            return height - yScale(d.y)
+          })
+          .attr("width", xScale.bandwidth() - 80)
+          .attr("x", function(d, i) {
+            return xScale(d.x) + 25
+          })
+          .attr("y", function(d, i) {
+            return yScale(d.y)
+          });
+
+        svgG.selectAll("text")
+          .data(dayofNoon)
+          .enter().append("text")
+          .text(function(d) {
+            return d.y
+          })
+          .attr("x", function(d, i) {
+            return xScale(d.x) + xScale.bandwidth() / 2 - 15
+          })
+          .style("text-anchor", "middle")
+          .attr("y", function(d, i) {
+            return yScale(d.y) + 15
+          });
+
+
+        svgG2.selectAll("rect")
+          .data(dayofNight)
+          .enter().append("rect")
+          .attr("class", "bar2")
+          .attr("height", function(d, i) {
+            return height - yScale(d.y)
+          })
+          .attr("width", xScale.bandwidth() - 80)
+          .attr("x", function(d, i) {
+            return xScale(d.x) + 55
+          })
+          .attr("y", function(d, i) {
+            return yScale(d.y)
+          });
+
+        svgG2.selectAll("text")
+          .data(dayofNight)
+          .enter().append("text")
+          .text(function(d) {
+            return d.y
+          })
+          .attr("x", function(d, i) {
+            return xScale(d.x) + xScale.bandwidth() / 2 + 15
+          })
+          .style("text-anchor", "middle")
+          .attr("y", function(d, i) {
+            return yScale(d.y) + 15
+          });
+
+
+        svgG.append("g")
+          .attr("transform", "translate(0," + (height) + ")")
+          .call(d3.axisBottom(xScale));
+
+        svgG.append("g")
+          .call(d3.axisLeft(yScale).ticks(5));
+
+      });
+    </script>
+    <div class="dayBox">
+      <div style="margin-left : 25px">DayTime</div>
+    </div>
+
+    <div class="nightBox">
+      <div style="margin-left : 25px">NightTime</div>
+    </div>
+
+  </div>
 
 
 </body>

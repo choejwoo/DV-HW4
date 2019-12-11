@@ -1,0 +1,29 @@
+@charset "utf-8";
+
+  svg {
+    border: 1px solid;
+  }
+
+  .bar {
+    fill: #ef8a62;
+  }
+
+  .bar2 {
+    fill: #67a9cf;
+  }
+
+  .dayBox {
+    float: bottom;
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+    background: #ef8a62;
+  }
+
+  .nightBox {
+    float: bottom;
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+    background: #67a9cf;
+  }
