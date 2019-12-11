@@ -20,11 +20,6 @@
       stroke: skyblue;
     }
 
-    .bar:hover {
-      fill: skyblue;
-      fill-opacity: 1;
-    }
-
     .text {
       fill: black;
       /*-일반적으로 폰트색은 font-color지만 여긴 d3는 fill-*/
@@ -72,10 +67,15 @@
     </div>
   </nav>
 
-  <dir class="barChart">
-    <h1>2015 ~ 2018년도 차량 별 사고 수</h1>
+  <div class="container" style="margin-top : 25px; margin-bottom : 50px">
+    <h1> 2015 ~ 2018년도 차량 별 사고 수</h1>
 
-    <svg width="900" height="500"></svg>
+    <svg width="1000" height="600"></svg>
+    <p style="margin-left:50px">X:차종 Y:사고수</p>
+    <p>차량에 따른 사망사고 수를 파악할 수 있습니다.</p>
+
+    <p>그래프를 보면, 제일 사망사고가 많은 차량은 승용차, 화물차, 이륜차 순으로 나타나며, 한국교통공사 통계 자료와 비교하여, 차량의 이용자가 많은 수록 사고가 많다는 걸 알 수 있었습니다. </p>
+
     <script>
       var day = [];
       var a = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -236,15 +236,21 @@
         //translate를 이용하여 축을 x축을 그//
       });
     </script>
-    <p style="margin-left:50px">X:차종 Y:사고수</p>
+
   </dir>
 
 
 <!--여기부터 차종 승용차 사고 유형별 사말사고 수 -->
-  <div>
+  <div class="container" style="margin-top : 25px; margin-bottom : 50px">
     <h1>2015 ~ 2018년도 승용차 사고 유형별 사망사고 수</h1>
     <!-- Create a div where the graph will take place -->
     <div id="my_dataviz"></div>
+
+    <p style="margin-top : 25px">승용차 사망사고 중 사망원인의 비율을 나타낸 그래프입니다.</p>
+    <p>
+      그래프는 보면, 승용차 사망사고 중 가장 많은 이유를 차지하는 것은 안전의무 불이행이고, 다음으로는 중앙선 침범, 과속 등의 이유로 사고가 많이 발생함을
+      알수 있습니다.
+    </p>
 
     <script>
       d3.csv("DV3/dataSet.csv", function(data) {
@@ -389,10 +395,17 @@
 
   <!--여기부터 차종 화물차 사고 유형별 사말사고 수 -->
 
-  <div>
+  <div class="container" style="margin-top : 25px; margin-bottom : 50px">
     <h1>2015 ~ 2018년도 화물차 사고 유형별 사망사고 수</h1>
     <!-- Create a div where the graph will take place -->
     <div id="my_dataviz3"></div>
+
+    <p style="margin-top : 25px">화물차 사망사고 중 사망원인의 비율을 나타낸 그래프입니다.</p>
+    <p>
+      그래프는 보면, 승용차 사망사고 비율 그래프와 동일하게 가장 많은 사고 원인은 안전의무 불이행입니다.
+      하지만 승용차보다 비율이 더 큼을 알 수 있습니다.
+      그 다음올 비율이 높은 사고는 중앙선 침범, 신호 위반 순이였습니다.
+    </p>
 
     <script>
 
@@ -533,9 +546,15 @@
   </div>
 
   <!-- 이륜차   -->
-  <div>
+  <div class="container" style="margin-top : 25px; margin-bottom : 50px">
     <h1>2015 ~ 2018년도 이륜차 사고 유형별 사망사고 수</h1>
     <div id="my_dataviz2"></div>
+
+    <p style="margin-top : 25px">이륜차 사망사고 중 사망원인의 비율을 나타낸 그래프입니다.</p>
+    <p>
+      그래프는 보면, 승용차와 화물차 사망사고 비율 그래프와 동일하게 가장 많은 사고 원인은 안전의무 불이행입니다.
+      하지만 이전의 그래프들과는 차이점이 존재하는데, 신호 위반의 비율이 높고, 타 그래프에서는 사고 비율 2순위인 중앙선 침범이 3순위인것을 확인할 수 있었습니다.
+    </p>
 
     <script>
     d3.csv("DV3/dataSet.csv",function(data){
