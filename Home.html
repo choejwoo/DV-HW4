@@ -1,21 +1,134 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 
-  <html lang="en" dir="ltr">
-
-
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
-  <head>
-    <meta charset="utf-8">
-    <title>교통사고 사망자 통계 분석</title>
-  </head>
-
-  <body>
+<html lang="en" dir="ltr">
 
 
-    <div class="btn-group-vertical" data-toggle="buttons">
-      <button type="button" class="btn btn-primary">Button</button>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+<head>
+  <meta charset="utf-8">
+  <title>교통사고 사상자 통계 분석 페이지</title>
+</head>
+
+<body>
+
+
+
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="font: bold">
+    <a class="navbar-brand" href="#"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">홈 <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">주, 야간</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">차량 종류</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">인구 수</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">도로 형태</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">지역</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">종합</a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <p>
+          <strong>made by 최재우, 신명하</strong>
+        </p>
+      </form>
     </div>
-  </body>
+  </nav>
 
-  </html>
+
+  <h1 style="text-align : center">Data Visualization</h1>
+  <h3 style="text-align : center">Sejong University</h3>
+  <h5 style="text-align : center">Homework #4</h5>
+  <h5 style="text-align : center">대한민국 교통사고 사상자 데이터 분석</h5>
+
+  <div class="container">
+
+    <div class="row">
+
+      <div class="col-lg-4">
+
+        <div class="card bg-light mb-3" style="max-width: 20rem;">
+          <div class="card-header">주,야간</div>
+          <div class="card-body">
+            <h4 class="card-title">주간, 야간 기준 분석</h4>
+            <p class="card-text">주, 야간 기준으로 차종 별, 요일 별 데이터 분석을 하였습니다.</p>
+          </div>
+        </div>
+
+        <div class="card bg-light mb-3" style="max-width: 20rem;">
+          <div class="card-header">도로 형태</div>
+          <div class="card-body">
+            <h4 class="card-title">도로 형태 별 분석</h4>
+            <p class="card-text">도로 형태 별 교통사고 사상자 분석을 하였습니다.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-lg-4">
+
+
+        <div class="card bg-light mb-3" style="max-width: 20rem;">
+          <div class="card-header">차량 종류</div>
+          <div class="card-body">
+            <h4 class="card-title">사고 차종 별 분석</h4>
+            <p class="card-text">차종 별 사고 비율, 원인 분석을 하였습니다.</p>
+          </div>
+        </div>
+
+        <div class="card bg-light mb-3" style="max-width: 20rem;">
+          <div class="card-header">지역</div>
+          <div class="card-body">
+            <h4 class="card-title">사고 발생 지역 별 분석</h4>
+            <p class="card-text">지도를 통해 데이터 분석 및 시각화를 진행했습니다.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-lg-4">
+
+        <div class="card bg-light mb-3" style="max-width: 20rem;">
+          <div class="card-header">인구 수</div>
+          <div class="card-body">
+            <h4 class="card-title">인구 수 대비 사상자 분석</h4>
+            <p class="card-text">인구 수 데이터를 추가하여, 분석과 시각화를 하였습니다.</p>
+          </div>
+        </div>
+
+        <div class="card bg-light mb-3" style="max-width: 20rem;">
+          <div class="card-header">종합</div>
+          <div class="card-body">
+            <h4 class="card-title">자세한 분석, 결론 도출</h4>
+            <p class="card-text">분석한 데이터와 시각화를 통해 나온 결론입니다.</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+</body>
+
+</html>
