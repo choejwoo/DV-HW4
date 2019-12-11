@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- Load d3.js -->
+
+<script src="https://d3js.org/d3.v4.js"></script>
+<style>
+  svg {
+    border: 1px solid;
+  }
+
+  div {
+    width:700px;
+  }
+</style>
+<!-- Create a div where the graph will take place -->
+<h1>2015 ~ 2018년도 차량 별 주야간 사망사고 수</h1>
+<div id="my_dataviz"></div>
+<p style="margin-left:50px">X:차종  Y:사고수</p>
+<table height="10px" width="10px" style="background-color:#f4a582; float:left; margin-left:50px;margin-right:2px"></table>
+<div>주간 (06:00 ~ 17:59)</div>
+<table height="10px" width="10px" style="background-color:#92c5de; float:left; margin-left:50px;margin-right:2px"></table>
+<div>야간 (18:00 ~ 05:59)</div>
+<script>
+  // set the dimensions and margins of the graph
+  var margin = {
+      top: 10,
+      right: 30,
+      bottom: 20,
+      left: 50
+    },
+    width = 700 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
+
+  // append the svg object to the body of the page
+  var svg = d3.select("#my_dataviz")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+      "translate(" + margin.left + "," + margin.top + ")");
+
+  // Parse the Data
+  d3.csv("dataSet.csv", function(data) {
+    var count = [0, 0, 0, 0, 0, 0];
+
+    data.forEach(function(d) {
+      if (d.가해자_당사자종별_대분류 == "승용차") {
+        if (d.주야 == "주간") {
+          count[0]++;
+        } else if (d.주야 == "야간") {
+          count[1]++;
+        }
+      } else if (d.가해자_당사자종별_대분류 == "화물차") {
+        if (d.주야 == "주간") {
+          count[2]++;
+        } else if (d.주야 == "야간") {
+          count[3]++;
+        }
+      } else if (d.가해자_당사자종별_대분류 == "이륜차") {
+        if (d.주야 == "주간") {
+          count[4]++;
+        } else if (d.주야 == "야간") {
+          count[5]++;
+        }
+      }
+    });
+
+    var countedData = [];
+
+    // List of subgroups = header of the csv files = soil condition here
+    //var subgroups = data.columns.slice(1)
+    var subgroups = ["주", "야"]
+
+    // List of groups = species here = value of the first column called group -> I show them on the X axis
+    var groups = ["승용차", "화물차", "이륜차"];
+
+    countedData.push({
+      group: '승합차',
+      주: count[0],
+      야: count[1]
+    });
+    countedData.push({
+      group: '화물차',
+      주: count[2],
+      야: count[3]
+    });
+    countedData.push({
+      group: '이륜차',
+      주: count[4],
+      야: count[5]
+    });
+
+    var Tooltip = d3.select("#my_dataviz")
+     .append("div")
+     .style("opacity", 0)
+     .attr("class", "tooltip")
+     .style("background-color", "white")
+     .style("border", "solid")
+     .style("border-width", "2px")
+     .style("border-radius", "5px")
+     .style("padding", "5px")
+
+     // Three function that change the tooltip when user hover / move / leave a cell
+     var mouseover = function(d) {
+       Tooltip
+         .style("opacity", 1)
+     }
+     var mousemove = function(d) {
+       Tooltip
+         .html("value: " + d[1])
+         .style("left", (d3.mouse(this)[0]+70) + "px")
+         .style("top", (d3.mouse(this)[1]) + "px")
+     }
+     var mouseleave = function(d) {
+       Tooltip
+         .style("opacity", 0)
+     }
+
+    // Add X axis
+    var x = d3.scaleBand()
+      .domain(groups)
+      .range([0, width])
+      .padding([0.2])
+    svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x).tickSizeOuter(0));
+
+    // Add Y axis
+    var y = d3.scaleLinear()
+      .domain([0, 9000])
+      .range([height, 0]);
+    svg.append("g")
+      .call(d3.axisLeft(y));
+
+    // color palette = one color per subgroup
+    var color = d3.scaleOrdinal()
+      .domain(subgroups)
+      .range(['#f4a582', '#92c5de'])
+
+    //stack the data? --> stack per subgroup
+    var stackedData = d3.stack()
+      .keys(subgroups)
+      (countedData)
+
+    // Show the bars
+    svg.append("g")
+      .selectAll("g")
+      // Enter in the stack data = loop key per key = group per group
+      .data(stackedData)
+      .enter().append("g")
+      .attr("fill", function(d) {
+        return color(d.key);
+      })
+      .selectAll("rect")
+      // enter a second time = loop subgroup per subgroup to add all rectangles
+      .data(function(d) {
+        return d;
+      })
+      .enter().append("rect")
+      .attr("x", function(d) {
+        return x(d.data.group);
+      })
+      .attr("y", function(d) {
+        return y(d[1]);
+      })
+      .attr("height", function(d) {
+        return y(d[0]) - y(d[1]);
+      })
+      .attr("width", x.bandwidth())
+      .on("mouseover", mouseover)
+      .on("mousemove", mousemove)
+      .on("mouseleave", mouseleave)
+
+
+  })
+</script>
