@@ -325,11 +325,15 @@
     <table height="10px" width="10px" style="background-color:#92c5de; float:left; margin-left:50px;margin-right:2px"></table>
     <div>야간 (18:00 ~ 05:59)</div>
     <p>
-      명하1
+      시간에 따른 차종별 사망사고 분포를 확인하기 위해, 주간 야간으로 나누어 시각화를 하였습니다.
     </p>
     <p>
-      명하2
-      </p>
+     그래프를 보면, 승용차의 경우, 야간사고가 더 많지만, 화문차와 이륜차는 주간에 사고 수가 더 많은 것을 확인할 수 있었습니다.
+    </p>
+    <p>
+     하지만 차종에 따른 정확한 시간별 사망사고 수를 파악할 수는 없어 다른 시각화를 시도했습니다.
+    </p>
+
     <script>
       // set the dimensions and margins of the graph
       var margin = {
@@ -467,11 +471,15 @@
 
     <p style="margin-left:50px">X:시간 Y:사고수</p>
     <p>
-      명하1
+      차종에 따른 시간별 사망사고 수를 선 그래프로 표현하였습니다.
     </p>
     <p>
-      명하2
-      </p>
+      선 그래프를 통해 시간에 따른 사망사고 분포를 파악할 수 있었고, 주간과 야간에 따른 사고량뿐만 아니라, 어느 시간에 사고가 많이 발생하는지 또한 파악할 수 있습니다.
+      이전 차종별 주야간 사망사고 수 그래프에서 승용차의 경우 야간에 많은 사고가 발생한다고 하였는데, 위 그래프에서는 19시 부근에 많은 사고가 발생한다는 점을 알 수 있습니다.
+
+    </p>
+
+
     <!-- Color Scale -->
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
@@ -815,8 +823,6 @@
 
       })
     </script>
-
-
   </div>
 </body>
 
