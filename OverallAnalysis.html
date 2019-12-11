@@ -20,438 +20,445 @@
 
 
 
-<div style = "margin-left : -300px">
+  <div style="margin-left : -300px">
 
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="font: bold">
-    <a class="navbar-brand" href="#"></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-
-        <div class="collapse navbar-collapse" id="navbarColor01">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/Home.html">홈</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/DayandNight.html">주, 야간</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/CarClassification.html">차량 종류</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/Population.html">인구 수</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/RoadType.html">도로 형태</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/Map.html">지역</a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/OverallAnalysis.html">종합 <span class="sr-only">(current)</span></a>
-            </li>
-          </ul>
-        </div>
-  </nav>
-</div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="font: bold">
+      <a class="navbar-brand" href="#"></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
 
-<body style="margin-left : 300px">
-  <p style="font-size : 30px">
-    <span style = "margin-left : 200px">교차로 형태와 사고 형태에 따른 사망자 수 통계<br />
+      <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/Home.html">홈</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/DayandNight.html">주, 야간</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/CarClassification.html">차량 종류</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/Population.html">인구 수</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/RoadType.html">도로 형태</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/Map.html">지역</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="https://choejwoo.github.io/DV-HW4/OverallAnalysis.html">종합 <span class="sr-only">(current)</span></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+
+  <body style="margin-left : 300px">
+    <p style="font-size : 30px">
+      <span style="margin-left : 200px">교차로 형태와 사고 형태에 따른 사망자 수 통계<br />
       </span>
-    <span style="margin-left : 150px; font-size : 15px">교차로 내</span>
-    <span style="margin-left : 250px; font-size : 15px">교차로 부근</span>
-    <span style="margin-left : 270px; font-size : 15px">횡단보도 내</span>
+      <span style="margin-left : 150px; font-size : 15px">교차로 내</span>
+      <span style="margin-left : 250px; font-size : 15px">교차로 부근</span>
+      <span style="margin-left : 270px; font-size : 15px">횡단보도 내</span>
+    </p>
+
+    <svg width="1050" height="500"></svg>
+
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script>
+      var inCrossRoad = [];
+      var nearCrossRoad = [];
+      var inCrossWalk = [];
+
+      var carvPerson = 0;
+      var carvCar = 0;
+      var car = 0;
+
+      d3.csv("DV/accidents.csv", function(error, data) {
+
+
+        data.forEach(function(d) {
+          if (d.도로형태 == "교차로내") {
+            if (d.사고유형_대분류 == "차대사람")
+              carvPerson = carvPerson + parseInt(d.사망자수);
+            if (d.사고유형_대분류 == "차대차")
+              carvCar = carvCar + parseInt(d.사망자수);
+            if (d.사고유형_대분류 == "차량단독")
+              car = car + parseInt(d.사망자수);
+          }
+        });
+
+        inCrossRoad.push({
+          x: "차대사람",
+          y: carvPerson
+        });
+        inCrossRoad.push({
+          x: "차대차",
+          y: carvCar
+        });
+        inCrossRoad.push({
+          x: "차량단독",
+          y: car
+        });
+        carvPerson = 0;
+        carvCar = 0;
+        car = 0;
+
+        data.forEach(function(d) {
+          if (d.도로형태 == "교차로부근") {
+            if (d.사고유형_대분류 == "차대사람")
+              carvPerson = carvPerson + parseInt(d.사망자수);
+            if (d.사고유형_대분류 == "차대차")
+              carvCar = carvCar + parseInt(d.사망자수);
+            if (d.사고유형_대분류 == "차량단독")
+              car = car + parseInt(d.사망자수);
+          }
+        });
+
+        nearCrossRoad.push({
+          x: "차대사람",
+          y: carvPerson
+        });
+        nearCrossRoad.push({
+          x: "차대차",
+          y: carvCar
+        });
+        nearCrossRoad.push({
+          x: "차량단독",
+          y: car
+        });
+        carvPerson = 0;
+        carvCar = 0;
+        car = 0;
+
+        data.forEach(function(d) {
+          if (d.도로형태 == "교차로횡단보도내") {
+            if (d.사고유형_대분류 == "차대사람")
+              carvPerson = carvPerson + parseInt(d.사망자수);
+            if (d.사고유형_대분류 == "차대차")
+              carvCar = carvCar + parseInt(d.사망자수);
+            if (d.사고유형_대분류 == "차량단독")
+              car = car + parseInt(d.사망자수);
+          }
+        });
+
+        inCrossWalk.push({
+          x: "차대사람",
+          y: carvPerson
+        });
+        inCrossWalk.push({
+          x: "차대차",
+          y: carvCar
+        });
+        inCrossWalk.push({
+          x: "차량단독",
+          y: car
+        });
+
+
+        var svg = d3.select("svg");
+        var width = parseInt(svg.style("width"), 10);
+        var height = parseInt(svg.style("height"), 10) - 20;
+
+        var svgG = svg.append("g")
+          .attr("transform", "translate(30,0)");
+
+        var yScale = d3.scaleLinear()
+          .domain([0, d3.max(inCrossRoad, function(d) {
+            return d.y;
+          })])
+          .range([height, 30]);
+
+        var xScale = d3.scaleBand()
+          .domain(inCrossRoad.map(function(d) {
+            return d.x;
+          }))
+          .range([0, 300]).padding(0, 50);
+
+        svgG.selectAll("rect")
+          .data(inCrossRoad)
+          .enter().append("rect")
+          .attr("class", "bar")
+          .attr("height", function(d, i) {
+            return height - yScale(d.y)
+          })
+          .attr("width", xScale.bandwidth() - 80)
+          .attr("x", function(d, i) {
+            return xScale(d.x) + 40
+          })
+          .attr("y", function(d, i) {
+            return yScale(d.y)
+          });
+
+        svgG.selectAll("text")
+          .data(inCrossRoad)
+          .enter().append("text")
+          .text(function(d) {
+            return d.y
+          })
+          .attr("x", function(d, i) {
+            return xScale(d.x) + xScale.bandwidth() / 2
+          })
+          .style("text-anchor", "middle")
+          .attr("y", function(d, i) {
+            return yScale(d.y) - 5
+          });
+
+
+
+        svgG.append("g")
+          .attr("transform", "translate(0," + (height) + ")")
+          .call(d3.axisBottom(xScale));
+
+        svgG.append("g")
+          .call(d3.axisLeft(yScale).ticks(5));
+
+        //
+
+
+        var svg2 = d3.select("svg");
+        var width2 = parseInt(svg2.style("width"), 310);
+        var height2 = parseInt(svg2.style("height"), 10) - 20;
+
+        var svgG2 = svg2.append("g")
+          .attr("transform", "translate(30,0)");
+
+        var yScale2 = d3.scaleLinear()
+          .domain([0, d3.max(nearCrossRoad, function(d) {
+            return d.y;
+          })])
+          .range([height, 30]);
+
+        var xScale2 = d3.scaleBand()
+          .domain(nearCrossRoad.map(function(d) {
+            return d.x;
+          }))
+          .range([350, 650]).padding(0, 50);
+
+        svgG2.selectAll("rect")
+          .data(nearCrossRoad)
+          .enter().append("rect")
+          .attr("class", "bar2")
+          .attr("height", function(d, i) {
+            return height - yScale2(d.y)
+          })
+          .attr("width", xScale2.bandwidth() - 80)
+          .attr("x", function(d, i) {
+            return xScale2(d.x) + 40
+          })
+          .attr("y", function(d, i) {
+            return yScale2(d.y)
+          });
+
+        svgG2.selectAll("text")
+          .data(nearCrossRoad)
+          .enter().append("text")
+          .text(function(d) {
+            return d.y
+          })
+          .attr("x", function(d, i) {
+            return xScale2(d.x) + xScale2.bandwidth() / 2
+          })
+          .style("text-anchor", "middle")
+          .attr("y", function(d, i) {
+            return yScale2(d.y) - 5
+          });
+
+
+
+        svgG2.append("g")
+          .attr("transform", "translate(0," + (height) + ")")
+          .call(d3.axisBottom(xScale2));
+
+        svgG2.append("g")
+          .attr("transform", "translate(350,0)")
+          .call(d3.axisLeft(yScale2).ticks(5));
+
+        //
+
+
+        var svg3 = d3.select("svg");
+        var width3 = parseInt(svg3.style("width"), 310);
+        var height3 = parseInt(svg3.style("height"), 10) - 20;
+
+        var svgG3 = svg3.append("g")
+          .attr("transform", "translate(30,0)");
+
+        var yScale3 = d3.scaleLinear()
+          .domain([0, d3.max(inCrossWalk, function(d) {
+            return d.y;
+          })])
+          .range([height, 30]);
+
+        var xScale3 = d3.scaleBand()
+          .domain(inCrossWalk.map(function(d) {
+            return d.x;
+          }))
+          .range([700, 1000]).padding(0, 50);
+
+        svgG3.selectAll("rect")
+          .data(inCrossWalk)
+          .enter().append("rect")
+          .attr("class", "bar3")
+          .attr("height", function(d, i) {
+            return height - yScale3(d.y)
+          })
+          .attr("width", xScale3.bandwidth() - 80)
+          .attr("x", function(d, i) {
+            return xScale3(d.x) + 40
+          })
+          .attr("y", function(d, i) {
+            return yScale3(d.y)
+          });
+
+        svgG3.selectAll("text")
+          .data(inCrossWalk)
+          .enter().append("text")
+          .text(function(d) {
+            return d.y
+          })
+          .attr("x", function(d, i) {
+            return xScale3(d.x) + xScale3.bandwidth() / 2
+          })
+          .style("text-anchor", "middle")
+          .attr("y", function(d, i) {
+            return yScale3(d.y) - 5
+          });
+
+
+
+        svgG3.append("g")
+          .attr("transform", "translate(0," + (height) + ")")
+          .call(d3.axisBottom(xScale3));
+
+        svgG3.append("g")
+          .attr("transform", "translate(700,0)")
+          .call(d3.axisLeft(yScale3).ticks(5));
+
+      });
+    </script>
+
+
+  </body>
+
+  <p style="margin-left : 200px; margin-top : 10px; margin-bottom:30px">
+    앞서 확인한 데이터 분석을 통해 교차로가 단일로 보다 더 높은 사망률을 보였습니다.<br />
+    교차로 데이터만을 통한 분석을 진행했습니다. <br />
+    교차로 내에서는 차대차 사고가 제일 많았고, 횡단보도에서는 차대 사람 사고가 제일 많았습니다. <br />
+    유의해서 볼 부분은 교차로 부근의 사고가 횡단보도보다 더 많은 사망자 수를 기록하고 있는 것입니다.
   </p>
+  </head>
+  <h2 style="margin-left : 280px">서울시 내 교차로 사망자 표시</h2>
+  <div style="margin-left : 50px">
 
-  <svg width="1050" height="500"></svg>
+    <div id="chart"></div>
+    <script>
+      // set params
+      var width = 960,
+        height = 500;
+      var minColor = "#ff0000",
+        maxColor = "#ff0000";
+      var minValue = 5,
+        maxValue = 35; // TODO: automate
+      var legendWidth = 15,
+        legendHeight = 150,
+        margin = {
+          left: 100,
+          top: 30
+        };
 
-  <script src="https://d3js.org/d3.v4.min.js"></script>
-  <script>
-    var inCrossRoad = [];
-    var nearCrossRoad = [];
-    var inCrossWalk = [];
+      // define color scale
+      var colorScale = d3.scale.linear()
+        .range([minColor, maxColor]);
 
-    var carvPerson = 0;
-    var carvCar = 0;
-    var car = 0;
+      // define projection and path
+      var projection = d3.geo.mercator()
+        .center([126.9895, 37.5651])
+        .scale(80000)
+        .translate([2 * width / 5, height / 2]);
 
-    d3.csv("DV/accidents.csv", function(error, data) {
+      var path = d3.geo.path().projection(projection);
 
+      // add canvas
+      var svg = d3.select("#chart").append("svg")
+        .attr("width", width)
+        .attr("height", height);
 
-      data.forEach(function(d) {
-        if (d.도로형태 == "교차로내") {
-          if (d.사고유형_대분류 == "차대사람")
-            carvPerson = carvPerson + parseInt(d.사망자수);
-          if (d.사고유형_대분류 == "차대차")
-            carvCar = carvCar + parseInt(d.사망자수);
-          if (d.사고유형_대분류 == "차량단독")
-            car = car + parseInt(d.사망자수);
-        }
+      var map = svg.append("g").attr("id", "map"),
+        points = svg.append("g").attr("id", "places"),
+        legend = svg.append("g").attr("id", "legend");
+
+      // add map
+      d3.json("DV2/seoul_municipalities_topo_simple.json", function(error, data) {
+        var features = topojson.feature(data, data.objects.seoul_municipalities_geo).features;
+        map.selectAll('path')
+          .data(features)
+          .enter().append('path')
+          .attr('class', function(d) {
+            console.log();
+            return 'municipality c' + d.properties.code
+          })
+          .attr('d', path);
+
+        map.selectAll('text')
+          .data(features)
+          .enter().append("text")
+          .attr("transform", function(d) {
+            return "translate(" + path.centroid(d) + ")";
+          })
+          .attr("dy", ".35em")
+          .attr("class", "municipality-label")
+          .text(function(d) {
+            return d.properties.name;
+          })
       });
 
-      inCrossRoad.push({
-        x: "차대사람",
-        y: carvPerson
-      });
-      inCrossRoad.push({
-        x: "차대차",
-        y: carvCar
-      });
-      inCrossRoad.push({
-        x: "차량단독",
-        y: car
-      });
-      carvPerson = 0;
-      carvCar = 0;
-      car = 0;
+      // add circles
+      d3.csv("DV2/accidents.csv", function(dataSet) {
 
-      data.forEach(function(d) {
-        if (d.도로형태 == "교차로부근") {
-          if (d.사고유형_대분류 == "차대사람")
-            carvPerson = carvPerson + parseInt(d.사망자수);
-          if (d.사고유형_대분류 == "차대차")
-            carvCar = carvCar + parseInt(d.사망자수);
-          if (d.사고유형_대분류 == "차량단독")
-            car = car + parseInt(d.사망자수);
-        }
-      });
+        var data = [];
 
-      nearCrossRoad.push({
-        x: "차대사람",
-        y: carvPerson
-      });
-      nearCrossRoad.push({
-        x: "차대차",
-        y: carvCar
-      });
-      nearCrossRoad.push({
-        x: "차량단독",
-        y: car
-      });
-      carvPerson = 0;
-      carvCar = 0;
-      car = 0;
-
-      data.forEach(function(d) {
-        if (d.도로형태 == "교차로횡단보도내") {
-          if (d.사고유형_대분류 == "차대사람")
-            carvPerson = carvPerson + parseInt(d.사망자수);
-          if (d.사고유형_대분류 == "차대차")
-            carvCar = carvCar + parseInt(d.사망자수);
-          if (d.사고유형_대분류 == "차량단독")
-            car = car + parseInt(d.사망자수);
-        }
-      });
-
-      inCrossWalk.push({
-        x: "차대사람",
-        y: carvPerson
-      });
-      inCrossWalk.push({
-        x: "차대차",
-        y: carvCar
-      });
-      inCrossWalk.push({
-        x: "차량단독",
-        y: car
-      });
-
-
-      var svg = d3.select("svg");
-      var width = parseInt(svg.style("width"), 10);
-      var height = parseInt(svg.style("height"), 10) - 20;
-
-      var svgG = svg.append("g")
-        .attr("transform", "translate(30,0)");
-
-      var yScale = d3.scaleLinear()
-        .domain([0, d3.max(inCrossRoad, function(d) {
-          return d.y;
-        })])
-        .range([height, 30]);
-
-      var xScale = d3.scaleBand()
-        .domain(inCrossRoad.map(function(d) {
-          return d.x;
-        }))
-        .range([0, 300]).padding(0, 50);
-
-      svgG.selectAll("rect")
-        .data(inCrossRoad)
-        .enter().append("rect")
-        .attr("class", "bar")
-        .attr("height", function(d, i) {
-          return height - yScale(d.y)
+        dataSet.forEach(function(d) {
+          if (d.도로형태_대분류 == "교차로" && d.발생지시도 == "서울") {
+            data.push({
+              "pop": d.사망자수,
+              "lat": d.위도,
+              "lon": d.경도
+            });
+          }
         })
-        .attr("width", xScale.bandwidth() - 80)
-        .attr("x", function(d, i) {
-          return xScale(d.x) + 40
-        })
-        .attr("y", function(d, i) {
-          return yScale(d.y)
-        });
 
-      svgG.selectAll("text")
-        .data(inCrossRoad)
-        .enter().append("text")
-        .text(function(d) {
-          return d.y
-        })
-        .attr("x", function(d, i) {
-          return xScale(d.x) + xScale.bandwidth() / 2
-        })
-        .style("text-anchor", "middle")
-        .attr("y", function(d, i) {
-          return yScale(d.y) - 5
-        });
+        points.selectAll("circle")
+          .data(data)
+          .enter().append("circle")
+          .attr("cx", function(d) {
+            return projection([d.lon, d.lat])[0];
+          })
+          .attr("cy", function(d) {
+            return projection([d.lon, d.lat])[1];
+          })
+          .attr("r", function(d) {
+            return d.pop * 4;
+          })
+          .style("fill", function(d) {
+            return colorScale(d.pop);
+          });
 
-
-
-      svgG.append("g")
-        .attr("transform", "translate(0," + (height) + ")")
-        .call(d3.axisBottom(xScale));
-
-      svgG.append("g")
-        .call(d3.axisLeft(yScale).ticks(5));
-
-      //
-
-
-      var svg2 = d3.select("svg");
-      var width2 = parseInt(svg2.style("width"), 310);
-      var height2 = parseInt(svg2.style("height"), 10) - 20;
-
-      var svgG2 = svg2.append("g")
-        .attr("transform", "translate(30,0)");
-
-      var yScale2 = d3.scaleLinear()
-        .domain([0, d3.max(nearCrossRoad, function(d) {
-          return d.y;
-        })])
-        .range([height, 30]);
-
-      var xScale2 = d3.scaleBand()
-        .domain(nearCrossRoad.map(function(d) {
-          return d.x;
-        }))
-        .range([350, 650]).padding(0, 50);
-
-      svgG2.selectAll("rect")
-        .data(nearCrossRoad)
-        .enter().append("rect")
-        .attr("class", "bar2")
-        .attr("height", function(d, i) {
-          return height - yScale2(d.y)
-        })
-        .attr("width", xScale2.bandwidth() - 80)
-        .attr("x", function(d, i) {
-          return xScale2(d.x) + 40
-        })
-        .attr("y", function(d, i) {
-          return yScale2(d.y)
-        });
-
-      svgG2.selectAll("text")
-        .data(nearCrossRoad)
-        .enter().append("text")
-        .text(function(d) {
-          return d.y
-        })
-        .attr("x", function(d, i) {
-          return xScale2(d.x) + xScale2.bandwidth() / 2
-        })
-        .style("text-anchor", "middle")
-        .attr("y", function(d, i) {
-          return yScale2(d.y) - 5
-        });
-
-
-
-      svgG2.append("g")
-        .attr("transform", "translate(0," + (height) + ")")
-        .call(d3.axisBottom(xScale2));
-
-      svgG2.append("g")
-        .attr("transform", "translate(350,0)")
-        .call(d3.axisLeft(yScale2).ticks(5));
-
-      //
-
-
-      var svg3 = d3.select("svg");
-      var width3 = parseInt(svg3.style("width"), 310);
-      var height3 = parseInt(svg3.style("height"), 10) - 20;
-
-      var svgG3 = svg3.append("g")
-        .attr("transform", "translate(30,0)");
-
-      var yScale3 = d3.scaleLinear()
-        .domain([0, d3.max(inCrossWalk, function(d) {
-          return d.y;
-        })])
-        .range([height, 30]);
-
-      var xScale3 = d3.scaleBand()
-        .domain(inCrossWalk.map(function(d) {
-          return d.x;
-        }))
-        .range([700, 1000]).padding(0, 50);
-
-      svgG3.selectAll("rect")
-        .data(inCrossWalk)
-        .enter().append("rect")
-        .attr("class", "bar3")
-        .attr("height", function(d, i) {
-          return height - yScale3(d.y)
-        })
-        .attr("width", xScale3.bandwidth() - 80)
-        .attr("x", function(d, i) {
-          return xScale3(d.x) + 40
-        })
-        .attr("y", function(d, i) {
-          return yScale3(d.y)
-        });
-
-      svgG3.selectAll("text")
-        .data(inCrossWalk)
-        .enter().append("text")
-        .text(function(d) {
-          return d.y
-        })
-        .attr("x", function(d, i) {
-          return xScale3(d.x) + xScale3.bandwidth() / 2
-        })
-        .style("text-anchor", "middle")
-        .attr("y", function(d, i) {
-          return yScale3(d.y) - 5
-        });
-
-
-
-      svgG3.append("g")
-        .attr("transform", "translate(0," + (height) + ")")
-        .call(d3.axisBottom(xScale3));
-
-      svgG3.append("g")
-        .attr("transform", "translate(700,0)")
-        .call(d3.axisLeft(yScale3).ticks(5));
-
-    });
-  </script>
-
-
-</body>
-
-<p style = "margin-left : 200px; margin-top : 10px; margin-bottom:30px">
-  앞서 확인한 데이터 분석을 통해 교차로가 단일로 보다 더 높은 사망률을 보였습니다.<br />
-  교차로 데이터만을 통한 분석을 진행했습니다. <br />
-  교차로 내에서는 차대차 사고가 제일 많았고, 횡단보도에서는 차대 사람 사고가 제일 많았습니다. <br />
-  유의해서 볼 부분은 교차로 부근의 사고가 횡단보도보다 더 많은 사망자 수를 기록하고 있는 것입니다.
-</p>
-</head>
-<h2 style = "margin-left : 280px">서울시 내 교차로 사망자 표시</h2>
-<div style = "margin-left : 50px">
-
-  <div id="chart"></div>
-  <script>
-  // set params
-  var width = 960,
-      height = 500;
-  var minColor = "#ff0000",
-      maxColor = "#ff0000";
-  var minValue = 5,
-      maxValue = 35; // TODO: automate
-  var legendWidth = 15,
-      legendHeight = 150,
-      margin = { left: 100, top: 30 };
-
-  // define color scale
-  var colorScale = d3.scale.linear()
-      .range([minColor, maxColor]);
-
-  // define projection and path
-  var projection = d3.geo.mercator()
-      .center([126.9895, 37.5651])
-      .scale(80000)
-      .translate([2*width/5, height/2]);
-
-  var path = d3.geo.path().projection(projection);
-
-  // add canvas
-  var svg = d3.select("#chart").append("svg")
-      .attr("width", width)
-      .attr("height", height);
-
-  var map = svg.append("g").attr("id", "map"),
-      points = svg.append("g").attr("id", "places"),
-      legend = svg.append("g").attr("id", "legend");
-
-  // add map
-  d3.json("DV2/seoul_municipalities_topo_simple.json", function(error, data) {
-    var features = topojson.feature(data, data.objects.seoul_municipalities_geo).features;
-    map.selectAll('path')
-        .data(features)
-      .enter().append('path')
-        .attr('class', function(d) { console.log(); return 'municipality c' + d.properties.code })
-        .attr('d', path);
-
-    map.selectAll('text')
-        .data(features)
-      .enter().append("text")
-        .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
-        .attr("dy", ".35em")
-        .attr("class", "municipality-label")
-        .text(function(d) { return d.properties.name; })
-  });
-
-  // add circles
-  d3.csv("DV2/accidents.csv", function(dataSet) {
-
-    var data = [];
-
-    dataSet.forEach(function(d) {
-      if (d.도로형태_대분류 == "교차로" && d.발생지시도 == "서울")
-      {
-        data.push({
-          "pop": d.사망자수,
-          "lat": d.위도,
-          "lon": d.경도
-        });
-      }
-    })
-
-    points.selectAll("circle")
-      .data(data)
-      .enter().append("circle")
-      .attr("cx", function(d) {
-        return projection([d.lon, d.lat])[0];
-      })
-      .attr("cy", function(d) {
-        return projection([d.lon, d.lat])[1];
-      })
-      .attr("r", function(d) {
-        return d.pop*4;
-      })
-      .style("fill", function(d) {
-        return colorScale(d.pop);
       });
-
-  });
-
-
-  </script>
-</div>
-<p style ="margin-top : 10px; margin-left : 200px">
-  위 그래프에 이어서 서울시 내 교차로 사망자 수를 시각화 하였습니다.<br />
-  대부분의 사망사고가 일어난 교차로에서는 보통 1명의 사망자가 발생하였습니다. <br />
-  하지만 강동구에서 두개의 교차로, 서초구, 구로구의 교차로에서는 2번의 사고가 발생하였습니다. <br />
-  그리고 은평구에서는 사망자수가 2명인 교차로 사고가 발생했습니다.<br />
-  해당 교차로가 다른 교차로보다 사고에 더 취약한 것을 알 수 있습니다.
-</p>
+    </script>
+  </div>
+  <p style="margin-top : 10px; margin-left : 200px">
+    위 그래프에 이어서 서울시 내 교차로 사망자 수를 시각화 하였습니다.<br />
+    대부분의 사망사고가 일어난 교차로에서는 보통 1명의 사망자가 발생하였습니다. <br />
+    하지만 강동구에서 두개의 교차로, 서초구, 구로구의 교차로에서는 2번의 사고가 발생하였습니다. <br />
+    그리고 은평구에서는 사망자수가 2명인 교차로 사고가 발생했습니다.<br />
+    해당 교차로가 다른 교차로보다 사고에 더 취약한 것을 알 수 있습니다.
+  </p>
 
 
 
@@ -464,361 +471,381 @@
 
     <p style="margin-left:50px">X:시간 Y:사고수</p>
 
-    <p style ="margin-top : 10px; margin-left : 100px">
-      차종별 시간에 따른 사망사고 그래프
-    </p>
-    <p style ="margin-top : 10px; margin-left : 100px">
-      앞서 확인한 차량 별 주야간 사망사고 그래프를 통해, <br>
-      차종에 따라 주간과 야간의 사망사고 수가 차이가 난다는 것을 확인하였습니다.<br>
-      시간에 따라 나타내여, 주간, 야간 어느 시간 떄에 많은 사고가 발생하는 지를 확인할 수 있었습니다.<br>
-      차량 소유자들은 이러한 특정 시간 때에 좀 더 조심하여, 운전헤야 합니다.<br>
-      앞서 확인한 사고 사유들에 대해 좀 더 주의할 필요가 있습니다.<br>
+    <p style="margin-top : 10px; margin-left : 120px">
+      이 그래프를 통해 화물차는 주간에 더 많은 사고가 발생하고, <br />
+      승용차는 야간에 더 많은 사고가 일어나는 것을 확인할 수 있었습니다. <br />
+      추가로 이륜차는 평이한 그래프를 보였습니다.
     </p>
 
 
-    <!-- Color Scale -->
-    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <div class="container" style="margin-bottom:30px">
+      <img style="height: 500px; width: 80%; margin-left : -200px; display: block;" src="Image/result1.PNG" alt="hypot">
+      <h3 style="margin-left : 30px">종합 분석에 따른 사망사고의 특징</h3>
+    </div>
 
-    <script>
-      // set the dimensions and margins of the graph
-      var margin = {
-          top: 10,
-          right: 100,
-          bottom: 30,
-          left: 30
-        },
-        width = 800 - margin.left - margin.right,
-        height = 600 - margin.top - margin.bottom;
+    <div class="container" style="margin-bottom:30px">
+      <img style="height: 500px; width: 80%; margin-left : -200px; display: block;" src="Image/result2.PNG" alt="hypot">
+      <h3 style="margin-left : 50px">분석결과에 따른 필요한 조치</h3>
+    </div>
 
-      // append the svg3 object to the body of the page
-      var svg3 = d3.select("#my_dataviz")
-        .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
+    <p style="margin-top : 10px; margin-left : 100px; margin-bottom:30px">
+      1. 주,야간의 데이터와 차량 종류 데이터를 종합 분석하여 차량종류 별 취약한 시간대를 파악하였습니다. <br />
 
-      //Read the data
-      //d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_connectedscatter.csv", function(data) {
-      d3.csv("DV3/dataSet.csv", function(data) {
-        // List of groups (here I have one group per column)
-        var allGroup = ["승용차", "화물차", "이륜차"]
+    </p>
+    <p style="margin-top : 10px; margin-left : 100px; margin-bottom:30px">
+      2. 도로형태 데이터와 도로형태별 개수 데이터를 종합 분석하여 교차로가 사고에 취약한 것을 알고,<br />
+      세부분석을 통해 유의해야할 부분을 확인했습니다. <br />
+    </p>
+    <p style="margin-top : 10px; margin-left : 100px; margin-bottom:30px">
+      3. 인구 데이터와 교차로 데이터를 종합하여 인구수가 많은 서울시 내의 사고 교차로들을 확인했습니다. <br />
+    </p>
 
-        //달별 사고량 계산
-        var monthAccident1 = [
-          0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0,
-        ];
-
-        var monthAccident2 = [
-          0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0,
-        ];
-
-        var monthAccident3 = [
-          0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0,
-        ];
+  </div>
 
 
-        var parseTime = d3.timeParse("%H:%M");
-        var formatTime = d3.timeFormat("%H");
+  <!-- Color Scale -->
+  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
-        data.forEach(function(d) {
-          var myString = d.발생년월일시분;
-          var splits = myString.split(' ');
+  <script>
+    // set the dimensions and margins of the graph
+    var margin = {
+        top: 10,
+        right: 100,
+        bottom: 30,
+        left: 30
+      },
+      width = 800 - margin.left - margin.right,
+      height = 600 - margin.top - margin.bottom;
 
-          t = parseTime(splits[1]);
-          var hour = formatTime(t);
+    // append the svg3 object to the body of the page
+    var svg3 = d3.select("#my_dataviz")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
 
-          if (d.가해자_당사자종별_대분류 == "승용차") {
-            if (hour == '00') {
-              monthAccident1[0]++;
-            } else if (hour == '01') {
-              monthAccident1[1]++;
-            } else if (hour == '02') {
-              monthAccident1[2]++;
-            } else if (hour == '03') {
-              monthAccident1[3]++;
-            } else if (hour == '04') {
-              monthAccident1[4]++;
-            } else if (hour == '05') {
-              monthAccident1[5]++;
-            } else if (hour == '06') {
-              monthAccident1[6]++;
-            } else if (hour == '07') {
-              monthAccident1[7]++;
-            } else if (hour == '08') {
-              monthAccident1[8]++;
-            } else if (hour == '09') {
-              monthAccident1[9]++;
-            } else if (hour == '10') {
-              monthAccident1[10]++;
-            } else if (hour == '11') {
-              monthAccident1[11]++;
-            } else if (hour == '12') {
-              monthAccident1[12]++;
-            } else if (hour == '13') {
-              monthAccident1[13]++;
-            } else if (hour == '14') {
-              monthAccident1[14]++;
-            } else if (hour == '15') {
-              monthAccident1[15]++;
-            } else if (hour == '16') {
-              monthAccident1[16]++;
-            } else if (hour == '17') {
-              monthAccident1[17]++;
-            } else if (hour == '18') {
-              monthAccident1[18]++;
-            } else if (hour == '19') {
-              monthAccident1[19]++;
-            } else if (hour == '20') {
-              monthAccident1[20]++;
-            } else if (hour == '21') {
-              monthAccident1[21]++;
-            } else if (hour == '22') {
-              monthAccident1[22]++;
-            } else if (hour == '23') {
-              monthAccident1[23]++;
-            }
-          } else if (d.가해자_당사자종별_대분류 == "화물차") {
-            if (hour == '00') {
-              monthAccident2[0]++;
-            } else if (hour == '01') {
-              monthAccident2[1]++;
-            } else if (hour == '02') {
-              monthAccident2[2]++;
-            } else if (hour == '03') {
-              monthAccident2[3]++;
-            } else if (hour == '04') {
-              monthAccident2[4]++;
-            } else if (hour == '05') {
-              monthAccident2[5]++;
-            } else if (hour == '06') {
-              monthAccident2[6]++;
-            } else if (hour == '07') {
-              monthAccident2[7]++;
-            } else if (hour == '08') {
-              monthAccident2[8]++;
-            } else if (hour == '09') {
-              monthAccident2[9]++;
-            } else if (hour == '10') {
-              monthAccident2[10]++;
-            } else if (hour == '11') {
-              monthAccident2[11]++;
-            } else if (hour == '12') {
-              monthAccident2[12]++;
-            } else if (hour == '13') {
-              monthAccident2[13]++;
-            } else if (hour == '14') {
-              monthAccident2[14]++;
-            } else if (hour == '15') {
-              monthAccident2[15]++;
-            } else if (hour == '16') {
-              monthAccident2[16]++;
-            } else if (hour == '17') {
-              monthAccident2[17]++;
-            } else if (hour == '18') {
-              monthAccident2[18]++;
-            } else if (hour == '19') {
-              monthAccident2[19]++;
-            } else if (hour == '20') {
-              monthAccident2[20]++;
-            } else if (hour == '21') {
-              monthAccident2[21]++;
-            } else if (hour == '22') {
-              monthAccident2[22]++;
-            } else if (hour == '23') {
-              monthAccident2[23]++;
-            }
-          } else if (d.가해자_당사자종별_대분류 == "이륜차") {
-            if (hour == '00') {
-              monthAccident3[0]++;
-            } else if (hour == '01') {
-              monthAccident3[1]++;
-            } else if (hour == '02') {
-              monthAccident3[2]++;
-            } else if (hour == '03') {
-              monthAccident3[3]++;
-            } else if (hour == '04') {
-              monthAccident3[4]++;
-            } else if (hour == '05') {
-              monthAccident3[5]++;
-            } else if (hour == '06') {
-              monthAccident3[6]++;
-            } else if (hour == '07') {
-              monthAccident3[7]++;
-            } else if (hour == '08') {
-              monthAccident3[8]++;
-            } else if (hour == '09') {
-              monthAccident3[9]++;
-            } else if (hour == '10') {
-              monthAccident3[10]++;
-            } else if (hour == '11') {
-              monthAccident3[11]++;
-            } else if (hour == '12') {
-              monthAccident3[12]++;
-            } else if (hour == '13') {
-              monthAccident3[13]++;
-            } else if (hour == '14') {
-              monthAccident3[14]++;
-            } else if (hour == '15') {
-              monthAccident3[15]++;
-            } else if (hour == '16') {
-              monthAccident3[16]++;
-            } else if (hour == '17') {
-              monthAccident3[17]++;
-            } else if (hour == '18') {
-              monthAccident3[18]++;
-            } else if (hour == '19') {
-              monthAccident3[19]++;
-            } else if (hour == '20') {
-              monthAccident3[20]++;
-            } else if (hour == '21') {
-              monthAccident3[21]++;
-            } else if (hour == '22') {
-              monthAccident3[22]++;
-            } else if (hour == '23') {
-              monthAccident3[23]++;
-            }
+    //Read the data
+    //d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_connectedscatter.csv", function(data) {
+    d3.csv("DV3/dataSet.csv", function(data) {
+      // List of groups (here I have one group per column)
+      var allGroup = ["승용차", "화물차", "이륜차"]
+
+      //달별 사고량 계산
+      var monthAccident1 = [
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
+      ];
+
+      var monthAccident2 = [
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
+      ];
+
+      var monthAccident3 = [
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
+      ];
+
+
+      var parseTime = d3.timeParse("%H:%M");
+      var formatTime = d3.timeFormat("%H");
+
+      data.forEach(function(d) {
+        var myString = d.발생년월일시분;
+        var splits = myString.split(' ');
+
+        t = parseTime(splits[1]);
+        var hour = formatTime(t);
+
+        if (d.가해자_당사자종별_대분류 == "승용차") {
+          if (hour == '00') {
+            monthAccident1[0]++;
+          } else if (hour == '01') {
+            monthAccident1[1]++;
+          } else if (hour == '02') {
+            monthAccident1[2]++;
+          } else if (hour == '03') {
+            monthAccident1[3]++;
+          } else if (hour == '04') {
+            monthAccident1[4]++;
+          } else if (hour == '05') {
+            monthAccident1[5]++;
+          } else if (hour == '06') {
+            monthAccident1[6]++;
+          } else if (hour == '07') {
+            monthAccident1[7]++;
+          } else if (hour == '08') {
+            monthAccident1[8]++;
+          } else if (hour == '09') {
+            monthAccident1[9]++;
+          } else if (hour == '10') {
+            monthAccident1[10]++;
+          } else if (hour == '11') {
+            monthAccident1[11]++;
+          } else if (hour == '12') {
+            monthAccident1[12]++;
+          } else if (hour == '13') {
+            monthAccident1[13]++;
+          } else if (hour == '14') {
+            monthAccident1[14]++;
+          } else if (hour == '15') {
+            monthAccident1[15]++;
+          } else if (hour == '16') {
+            monthAccident1[16]++;
+          } else if (hour == '17') {
+            monthAccident1[17]++;
+          } else if (hour == '18') {
+            monthAccident1[18]++;
+          } else if (hour == '19') {
+            monthAccident1[19]++;
+          } else if (hour == '20') {
+            monthAccident1[20]++;
+          } else if (hour == '21') {
+            monthAccident1[21]++;
+          } else if (hour == '22') {
+            monthAccident1[22]++;
+          } else if (hour == '23') {
+            monthAccident1[23]++;
           }
-        });
-
-
-        var testData = [];
-
-        for (var i = 0; i < 24; i++) {
-          testData.push({
-            time: i + 1,
-            '승용차': monthAccident1[i],
-            '화물차': monthAccident2[i],
-            '이륜차': monthAccident3[i]
-          });
+        } else if (d.가해자_당사자종별_대분류 == "화물차") {
+          if (hour == '00') {
+            monthAccident2[0]++;
+          } else if (hour == '01') {
+            monthAccident2[1]++;
+          } else if (hour == '02') {
+            monthAccident2[2]++;
+          } else if (hour == '03') {
+            monthAccident2[3]++;
+          } else if (hour == '04') {
+            monthAccident2[4]++;
+          } else if (hour == '05') {
+            monthAccident2[5]++;
+          } else if (hour == '06') {
+            monthAccident2[6]++;
+          } else if (hour == '07') {
+            monthAccident2[7]++;
+          } else if (hour == '08') {
+            monthAccident2[8]++;
+          } else if (hour == '09') {
+            monthAccident2[9]++;
+          } else if (hour == '10') {
+            monthAccident2[10]++;
+          } else if (hour == '11') {
+            monthAccident2[11]++;
+          } else if (hour == '12') {
+            monthAccident2[12]++;
+          } else if (hour == '13') {
+            monthAccident2[13]++;
+          } else if (hour == '14') {
+            monthAccident2[14]++;
+          } else if (hour == '15') {
+            monthAccident2[15]++;
+          } else if (hour == '16') {
+            monthAccident2[16]++;
+          } else if (hour == '17') {
+            monthAccident2[17]++;
+          } else if (hour == '18') {
+            monthAccident2[18]++;
+          } else if (hour == '19') {
+            monthAccident2[19]++;
+          } else if (hour == '20') {
+            monthAccident2[20]++;
+          } else if (hour == '21') {
+            monthAccident2[21]++;
+          } else if (hour == '22') {
+            monthAccident2[22]++;
+          } else if (hour == '23') {
+            monthAccident2[23]++;
+          }
+        } else if (d.가해자_당사자종별_대분류 == "이륜차") {
+          if (hour == '00') {
+            monthAccident3[0]++;
+          } else if (hour == '01') {
+            monthAccident3[1]++;
+          } else if (hour == '02') {
+            monthAccident3[2]++;
+          } else if (hour == '03') {
+            monthAccident3[3]++;
+          } else if (hour == '04') {
+            monthAccident3[4]++;
+          } else if (hour == '05') {
+            monthAccident3[5]++;
+          } else if (hour == '06') {
+            monthAccident3[6]++;
+          } else if (hour == '07') {
+            monthAccident3[7]++;
+          } else if (hour == '08') {
+            monthAccident3[8]++;
+          } else if (hour == '09') {
+            monthAccident3[9]++;
+          } else if (hour == '10') {
+            monthAccident3[10]++;
+          } else if (hour == '11') {
+            monthAccident3[11]++;
+          } else if (hour == '12') {
+            monthAccident3[12]++;
+          } else if (hour == '13') {
+            monthAccident3[13]++;
+          } else if (hour == '14') {
+            monthAccident3[14]++;
+          } else if (hour == '15') {
+            monthAccident3[15]++;
+          } else if (hour == '16') {
+            monthAccident3[16]++;
+          } else if (hour == '17') {
+            monthAccident3[17]++;
+          } else if (hour == '18') {
+            monthAccident3[18]++;
+          } else if (hour == '19') {
+            monthAccident3[19]++;
+          } else if (hour == '20') {
+            monthAccident3[20]++;
+          } else if (hour == '21') {
+            monthAccident3[21]++;
+          } else if (hour == '22') {
+            monthAccident3[22]++;
+          } else if (hour == '23') {
+            monthAccident3[23]++;
+          }
         }
+      });
 
-        // Reformat the data: we need an array of arrays of {x, y} tuples
-        var dataReady = allGroup.map(function(grpName) { // .map allows to do something for each element of the list
-          return {
-            name: grpName,
-            values: testData.map(function(d) {
 
-              return {
-                time: d.time,
-                value: +d[grpName]
-              };
-            })
-          };
+      var testData = [];
+
+      for (var i = 0; i < 24; i++) {
+        testData.push({
+          time: i + 1,
+          '승용차': monthAccident1[i],
+          '화물차': monthAccident2[i],
+          '이륜차': monthAccident3[i]
         });
-        // I strongly advise to have a look to dataReady with
-        // console.log(dataReady)
+      }
 
+      // Reformat the data: we need an array of arrays of {x, y} tuples
+      var dataReady = allGroup.map(function(grpName) { // .map allows to do something for each element of the list
+        return {
+          name: grpName,
+          values: testData.map(function(d) {
 
-        // A color scale: one color for each group
-        var myColor = d3.scaleOrdinal()
-          .domain(allGroup)
-          .range(d3.schemeSet2);
-
-        // Add X axis --> it is a date format
-        var x = d3.scaleLinear()
-          .domain([0, 24])
-          .range([0, width])
-
-        svg3.append("g")
-          .attr("transform", "translate(0," + height + ")")
-          .call(d3.axisBottom(x).ticks(24))
-
-        // Add Y <axis></axis>
-        var y = d3.scaleLinear()
-          .domain([0, 600])
-          .range([height, 0]);
-        svg3.append("g")
-          .call(d3.axisLeft(y).ticks(15))
-
-        // Add the lines
-        var line = d3.line()
-          .x(function(d) {
-            return x(+d.time)
-          })
-          .y(function(d) {
-            return y(+d.value)
-          })
-        svg3.selectAll("myLines")
-          .data(dataReady)
-          .enter()
-          .append("path")
-          .attr("d", function(d) {
-            return line(d.values)
-          })
-          .attr("stroke", function(d) {
-            return myColor(d.name)
-          })
-          .style("stroke-width", 2)
-          .style("fill", "none")
-
-        //툴 팁
-
-
-        // Add the points
-        svg3
-          // First we need to enter in a group
-          .selectAll("myDots")
-          .data(dataReady)
-          .enter()
-          .append('g')
-          .style("fill", function(d) {
-            return myColor(d.name)
-          })
-          // Second we need to enter in the 'values' part of this group
-          .selectAll("myPoints")
-          .data(function(d) {
-            return d.values
-          })
-          .enter()
-          .append("circle")
-          .attr("cx", function(d) {
-            return x(d.time)
-          })
-          .attr("cy", function(d) {
-            return y(d.value)
-          })
-          .attr("r", 3)
-          .attr("stroke", "white")
-
-
-        // Add a legend at the end of each line
-        svg3
-          .selectAll("myLabels")
-          .data(dataReady)
-          .enter()
-          .append('g')
-          .append("text")
-          .datum(function(d) {
             return {
-              name: d.name,
-              value: d.values[d.values.length - 1]
+              time: d.time,
+              value: +d[grpName]
             };
-          }) // keep only the last value of each time series
-          .attr("transform", function(d) {
-            return "translate(" + x(d.value.time) + "," + y(d.value.value) + ")";
-          }) // Put the text at the position of the last point
-          .attr("x", 12) // shift the text a bit more right
-          .text(function(d) {
-            return d.name;
           })
-          .style("fill", function(d) {
-            return myColor(d.name)
-          })
-          .style("font-size", 15)
+        };
+      });
+      // I strongly advise to have a look to dataReady with
+      // console.log(dataReady)
 
-      })
-    </script>
+
+      // A color scale: one color for each group
+      var myColor = d3.scaleOrdinal()
+        .domain(allGroup)
+        .range(d3.schemeSet2);
+
+      // Add X axis --> it is a date format
+      var x = d3.scaleLinear()
+        .domain([0, 24])
+        .range([0, width])
+
+      svg3.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x).ticks(24))
+
+      // Add Y <axis></axis>
+      var y = d3.scaleLinear()
+        .domain([0, 600])
+        .range([height, 0]);
+      svg3.append("g")
+        .call(d3.axisLeft(y).ticks(15))
+
+      // Add the lines
+      var line = d3.line()
+        .x(function(d) {
+          return x(+d.time)
+        })
+        .y(function(d) {
+          return y(+d.value)
+        })
+      svg3.selectAll("myLines")
+        .data(dataReady)
+        .enter()
+        .append("path")
+        .attr("d", function(d) {
+          return line(d.values)
+        })
+        .attr("stroke", function(d) {
+          return myColor(d.name)
+        })
+        .style("stroke-width", 2)
+        .style("fill", "none")
+
+      //툴 팁
+
+
+      // Add the points
+      svg3
+        // First we need to enter in a group
+        .selectAll("myDots")
+        .data(dataReady)
+        .enter()
+        .append('g')
+        .style("fill", function(d) {
+          return myColor(d.name)
+        })
+        // Second we need to enter in the 'values' part of this group
+        .selectAll("myPoints")
+        .data(function(d) {
+          return d.values
+        })
+        .enter()
+        .append("circle")
+        .attr("cx", function(d) {
+          return x(d.time)
+        })
+        .attr("cy", function(d) {
+          return y(d.value)
+        })
+        .attr("r", 3)
+        .attr("stroke", "white")
+
+
+      // Add a legend at the end of each line
+      svg3
+        .selectAll("myLabels")
+        .data(dataReady)
+        .enter()
+        .append('g')
+        .append("text")
+        .datum(function(d) {
+          return {
+            name: d.name,
+            value: d.values[d.values.length - 1]
+          };
+        }) // keep only the last value of each time series
+        .attr("transform", function(d) {
+          return "translate(" + x(d.value.time) + "," + y(d.value.value) + ")";
+        }) // Put the text at the position of the last point
+        .attr("x", 12) // shift the text a bit more right
+        .text(function(d) {
+          return d.name;
+        })
+        .style("fill", function(d) {
+          return myColor(d.name)
+        })
+        .style("font-size", 15)
+
+    })
+  </script>
   </div>
 </body>
 
