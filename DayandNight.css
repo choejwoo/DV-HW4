@@ -31,3 +31,8 @@
   div {
     width:700px;
   }
+
+  div2 {
+    border: 1px solid;
+    width:800px;
+  }
