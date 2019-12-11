@@ -1,0 +1,47 @@
+svg circle {
+  opacity: .5;
+  stroke: white;
+}
+svg circle:hover {
+  stroke: #333;
+}
+svg .axis line, svg .axis path {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+svg .axis text {
+    font: 10px sans-serif;
+}
+svg .municipality {
+  fill: #efefef;
+  stroke: #fff;
+}
+svg .municipality-label {
+  fill: #999999;
+  font-size: 12px;
+  font-weight: 300;
+  text-anchor: middle;
+}
+svg #map text {
+  color: black;
+  font-size: 10px;
+  pointer-events: none;
+  text-anchor: middle;
+}
+
+svg {
+  border: 1px solid;
+}
+
+.bar {
+  fill: #66c2a5;
+}
+
+.bar2 {
+  fill: #fc8d62;
+}
+
+.bar3 {
+  fill: #8da0cb;
+}
